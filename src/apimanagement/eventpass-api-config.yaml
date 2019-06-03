@@ -1,0 +1,11 @@
+version: 0.0.1
+apimServiceName: apimServiceName
+apiVersionSet:
+    id: eventpass-v1
+    displayName: eventpass-v1
+    description: path-versioning
+    versioningScheme: Segment
+api:
+  name: eventpass 
+outputLocation: C:\GIT\ticketing-paas\PaaS.Ticketing\apimanagement
+linked: false

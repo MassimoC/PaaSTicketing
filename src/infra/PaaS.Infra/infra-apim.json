@@ -1,0 +1,97 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "infra": {
+      "type": "object",
+      "metadata": {
+        "description": "object that contains info about the infra."
+      }
+    },
+    "releaseInfo": {
+      "type": "object",
+      "metadata": {
+        "description": "info about the release that deployed this resource."
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for all resources."
+      }
+    }
+  },
+  "variables": {
+    "apiManagementServiceName": "[concat('if-', parameters('infra').environment.resourcePrefix, '-', parameters('infra').apim.name)]"
+  },
+  "resources": [
+    {
+      "apiVersion": "2018-06-01-preview",
+      "name": "[variables('apiManagementServiceName')]",
+      "location": "[parameters('location')]",
+      "type": "Microsoft.ApiManagement/service",
+      "sku": {
+        "name": "[parameters('infra').apim.sku]",
+        "capacity": "[parameters('infra').apim.skuCount]"
+      },
+      "properties": {
+        "publisherEmail": "[parameters('infra').apim.publisherEmail]",
+        "publisherName": "[parameters('infra').apim.publisherName]"
+      },
+      "tags": {
+        "releaseName": "[parameters('releaseInfo').release.name]",
+        "createdBy": "[parameters('releaseInfo').release.url]",
+        "environment": "[parameters('infra').environment.resourcePrefix]"
+      },
+      "resources": [
+        {
+          "apiVersion": "2018-06-01-preview",
+          "type": "loggers",
+          "name": "[parameters('infra').apim.loggerName]",
+          "dependsOn": [
+            "[concat('Microsoft.ApiManagement/service/', parameters('infra').apim.name)]"
+          ],
+          "properties": {
+            "loggerType": "applicationInsights",
+            "resourceId": "[parameters('infra').apim.appInsightsId]",
+            "credentials": {
+              "instrumentationKey": "[reference(parameters('infra').apim.appInsightsId, '2015-05-01').InstrumentationKey]"
+            }
+          }
+        },
+        {
+          "apiVersion": "2018-06-01-preview",
+          "type": "diagnostics",
+          "name": "applicationinsights",
+          "dependsOn": [
+            "[concat('Microsoft.ApiManagement/service/', variables('apiManagementServiceName'))]",
+            "[concat('Microsoft.ApiManagement/service/', variables('apiManagementServiceName'), '/loggers/', parameters('infra').apim.loggerName)]"
+          ],
+          "properties": {
+            "loggerId": "[concat('/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/', variables('apiManagementServiceName'), '/loggers/', parameters('infra').apim.loggerName)]",
+            "alwaysLog": "allErrors",
+            "sampling": {
+              "percentage": 100,
+              "samplingType": "fixed"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "outputs": {
+    "Infra.Apim.Name": {
+      "type": "string",
+      "value": "[variables('apiManagementServiceName')]"
+    },
+    "Infra.Apim.Id": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.ApiManagement/service', variables('apiManagementServiceName'))]"
+    },
+    "Infra.Apim.ResourceGroup": {
+      "type": "string",
+      "value": "[resourceGroup().name]"
+    }
+  }
+}

@@ -1,0 +1,114 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaaS.Ticketing.Api", "api\PaaS.Ticketing.Api\PaaS.Ticketing.Api.csproj", "{35F1C018-42EB-4F79-9D76-D891DB041A4F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{AD5578F0-E25D-471B-9F57-98A4DD7FF752}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{05CE95DA-BE74-444D-A1A0-429AFFBB46C6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ticketing.Idp", "identity\Ticketing.Idp\Ticketing.Idp.csproj", "{025B28E1-A4FB-4E6E-AB24-14F26DF59245}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{E45B9BB8-4FCB-4797-91B5-EE318D2E7298}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FaaS.Ticketing.Payment", "services\FaaS.Ticketing.Payment\FaaS.Ticketing.Payment.csproj", "{A04ED136-EF7D-4386-8D87-B45474A755CE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Events", "Events", "{12562158-8985-4172-B505-22EDB73D9282}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaaS.Ticketing.Events", "events\PaaS.Ticketing.Events\PaaS.Ticketing.Events.csproj", "{A33DC1EC-BC17-444F-9369-3192190C5819}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FaaS.Ticketing.Shipping", "services\FaaS.Ticketing.Shipping\FaaS.Ticketing.Shipping.csproj", "{497B6A75-80EA-495A-8022-06F2FF4E3F2B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FaaS.Ticketing.NotificationHandler", "services\FaaS.Ticketing.NotificationHandler\FaaS.Ticketing.NotificationHandler.csproj", "{14E92B01-8950-4889-B6C0-7575751B1F92}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infra", "Infra", "{115BF540-C1EA-4B5B-9C3E-69CC3AF5DB5E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaaS.Ticketing.Api.IntegationTest", "api\PaaS.Ticketing.Api.IntegationTest\PaaS.Ticketing.Api.IntegationTest.csproj", "{F08BD0D0-CFD5-480D-B92E-AA3C1099CCC4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ticketing.Idp.IntegrationTest", "identity\Ticketing.Idp.IntegrationTest\Ticketing.Idp.IntegrationTest.csproj", "{4DB517AB-08F1-4EFD-893E-9FCC525FFCC2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FaaS.Ticketing.Email", "events\FaaS.Ticketing.Email\FaaS.Ticketing.Email.csproj", "{CA4573E2-78E2-4316-B83F-441BD0CEB2A4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaaS.Ticketing.Events.IntegrationTests", "events\PaaS.Ticketing.Events.IntegrationTests\PaaS.Ticketing.Events.IntegrationTests.csproj", "{D67D67AA-17D4-49EC-A290-EB30622D2405}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiManagement", "ApiManagement", "{574D648C-79FF-4B8B-B576-ED03E7F92F55}"
+	ProjectSection(SolutionItems) = preProject
+		apimanagement\eventpass-api-config.yaml = apimanagement\eventpass-api-config.yaml
+		apimanagement\ticketing-core-api-v1.json = apimanagement\ticketing-core-api-v1.json
+	EndProjectSection
+EndProject
+Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "PaaS.Infra", "infra\PaaS.Infra\PaaS.Infra.deployproj", "{7214E63C-BD93-4823-B2D6-07C8CC223F7A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{35F1C018-42EB-4F79-9D76-D891DB041A4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35F1C018-42EB-4F79-9D76-D891DB041A4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35F1C018-42EB-4F79-9D76-D891DB041A4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35F1C018-42EB-4F79-9D76-D891DB041A4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{025B28E1-A4FB-4E6E-AB24-14F26DF59245}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{025B28E1-A4FB-4E6E-AB24-14F26DF59245}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{025B28E1-A4FB-4E6E-AB24-14F26DF59245}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{025B28E1-A4FB-4E6E-AB24-14F26DF59245}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A04ED136-EF7D-4386-8D87-B45474A755CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A04ED136-EF7D-4386-8D87-B45474A755CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A04ED136-EF7D-4386-8D87-B45474A755CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A04ED136-EF7D-4386-8D87-B45474A755CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A33DC1EC-BC17-444F-9369-3192190C5819}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A33DC1EC-BC17-444F-9369-3192190C5819}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A33DC1EC-BC17-444F-9369-3192190C5819}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A33DC1EC-BC17-444F-9369-3192190C5819}.Release|Any CPU.Build.0 = Release|Any CPU
+		{497B6A75-80EA-495A-8022-06F2FF4E3F2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{497B6A75-80EA-495A-8022-06F2FF4E3F2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{497B6A75-80EA-495A-8022-06F2FF4E3F2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{497B6A75-80EA-495A-8022-06F2FF4E3F2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14E92B01-8950-4889-B6C0-7575751B1F92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14E92B01-8950-4889-B6C0-7575751B1F92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14E92B01-8950-4889-B6C0-7575751B1F92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14E92B01-8950-4889-B6C0-7575751B1F92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F08BD0D0-CFD5-480D-B92E-AA3C1099CCC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F08BD0D0-CFD5-480D-B92E-AA3C1099CCC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F08BD0D0-CFD5-480D-B92E-AA3C1099CCC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F08BD0D0-CFD5-480D-B92E-AA3C1099CCC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DB517AB-08F1-4EFD-893E-9FCC525FFCC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DB517AB-08F1-4EFD-893E-9FCC525FFCC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DB517AB-08F1-4EFD-893E-9FCC525FFCC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DB517AB-08F1-4EFD-893E-9FCC525FFCC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA4573E2-78E2-4316-B83F-441BD0CEB2A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA4573E2-78E2-4316-B83F-441BD0CEB2A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA4573E2-78E2-4316-B83F-441BD0CEB2A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA4573E2-78E2-4316-B83F-441BD0CEB2A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D67D67AA-17D4-49EC-A290-EB30622D2405}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D67D67AA-17D4-49EC-A290-EB30622D2405}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D67D67AA-17D4-49EC-A290-EB30622D2405}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D67D67AA-17D4-49EC-A290-EB30622D2405}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7214E63C-BD93-4823-B2D6-07C8CC223F7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7214E63C-BD93-4823-B2D6-07C8CC223F7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7214E63C-BD93-4823-B2D6-07C8CC223F7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7214E63C-BD93-4823-B2D6-07C8CC223F7A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{35F1C018-42EB-4F79-9D76-D891DB041A4F} = {05CE95DA-BE74-444D-A1A0-429AFFBB46C6}
+		{025B28E1-A4FB-4E6E-AB24-14F26DF59245} = {AD5578F0-E25D-471B-9F57-98A4DD7FF752}
+		{A04ED136-EF7D-4386-8D87-B45474A755CE} = {E45B9BB8-4FCB-4797-91B5-EE318D2E7298}
+		{A33DC1EC-BC17-444F-9369-3192190C5819} = {12562158-8985-4172-B505-22EDB73D9282}
+		{497B6A75-80EA-495A-8022-06F2FF4E3F2B} = {E45B9BB8-4FCB-4797-91B5-EE318D2E7298}
+		{14E92B01-8950-4889-B6C0-7575751B1F92} = {E45B9BB8-4FCB-4797-91B5-EE318D2E7298}
+		{F08BD0D0-CFD5-480D-B92E-AA3C1099CCC4} = {05CE95DA-BE74-444D-A1A0-429AFFBB46C6}
+		{4DB517AB-08F1-4EFD-893E-9FCC525FFCC2} = {AD5578F0-E25D-471B-9F57-98A4DD7FF752}
+		{CA4573E2-78E2-4316-B83F-441BD0CEB2A4} = {12562158-8985-4172-B505-22EDB73D9282}
+		{D67D67AA-17D4-49EC-A290-EB30622D2405} = {12562158-8985-4172-B505-22EDB73D9282}
+		{7214E63C-BD93-4823-B2D6-07C8CC223F7A} = {115BF540-C1EA-4B5B-9C3E-69CC3AF5DB5E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {215692DF-777A-45B9-A3AF-3D8BEACB7B3B}
+	EndGlobalSection
+EndGlobal

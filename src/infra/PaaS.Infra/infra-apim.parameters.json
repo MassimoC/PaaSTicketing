@@ -1,0 +1,30 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "infra": {
+      "value": {
+        "environment": {
+          "resourcePrefix": "dev"
+        },
+        "apim": {
+          "name": "tpass-apim",
+          "publisherEmail": "#{Infra.publisherEmail}#",
+          "publisherName": "TPassCorp",
+          "sku": "Consumption",
+          "skuCount": "1",
+          "loggerName": "if-tpass-ai",
+          "appInsightsId": "#{Infra.appInsightsId#}"
+        }
+      }
+    },
+    "releaseInfo": {
+      "value": {
+        "release": {
+          "name": "#{Release.ReleaseName}#",
+          "url": "#{Release.ReleaseWebUrl}#"
+        }
+      }
+    }
+  }
+}
