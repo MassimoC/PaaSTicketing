@@ -24,14 +24,14 @@ namespace PaaS.Ticketing.Api.Controllers
         }
 
         /// <summary>
-        /// Get concerts
+        /// Get users
         /// </summary>
-        /// <remarks>Provides a complete object for all known concerts</remarks>
+        /// <remarks>Provides a complete object for all known users</remarks>
         /// <returns>Return a list of Concerts</returns>
         [HttpGet(Name = "Users_GetAllUsers")]
-        [SwaggerResponse((int)HttpStatusCode.OK, "List of users")]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available")]
-        [Produces("application/json")]
+        [SwaggerResponse((int)HttpStatusCode.OK, "List of users", typeof(IEnumerable<UserDto>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available", typeof(ProblemDetails))]
+        [Produces("application/json", "application/problem+json")]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _usersRepository.GetUsersAsync();
@@ -46,10 +46,10 @@ namespace PaaS.Ticketing.Api.Controllers
         /// <remarks>Get information of a single user</remarks>
         /// <returns>Return a single user</returns>
         [HttpGet("{id}", Name = "Users_GetUserProfile")]
-        [SwaggerResponse((int)HttpStatusCode.OK, "User profile object")]
-        [SwaggerResponse((int)HttpStatusCode.NotFound, "User not found")]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available")]
-        [Produces("application/json")]
+        [SwaggerResponse((int)HttpStatusCode.OK, "User profile object", typeof(UserDto))]
+        [SwaggerResponse((int)HttpStatusCode.NotFound, "User not found", typeof(ProblemDetails))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available", typeof(ProblemDetails))]
+        [Produces("application/json", "application/problem+json")]
         public async Task<IActionResult> GetUserProfile(Guid id)
         {
             var user = await _usersRepository.GetUserAsync(id);
@@ -65,10 +65,11 @@ namespace PaaS.Ticketing.Api.Controllers
         /// <remarks>Create a new userr</remarks>
         /// <returns>Return the new user</returns>
         [HttpPost(Name = "Users_CreateUserProfile")]
-        [SwaggerResponse((int)HttpStatusCode.Created, "User profile created")]
-        [SwaggerResponse((int)HttpStatusCode.NotFound, "User not found")]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available")]
+        [SwaggerResponse((int)HttpStatusCode.Created, "User profile created", typeof(UserCreateDto))]
+        [SwaggerResponse((int)HttpStatusCode.NotFound, "User not found", typeof(ProblemDetails))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available", typeof(ProblemDetails))]
         [Consumes("application/json")]
+        [Produces("application/json", "application/problem+json")]
         public async Task<IActionResult> CreateUserProfile([FromBody] UserCreateDto user)
         {
             var entityUser = Mapper.Map<User>(user);

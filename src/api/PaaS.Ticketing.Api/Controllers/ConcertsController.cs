@@ -28,9 +28,9 @@ namespace PaaS.Ticketing.Api.Controllers
         /// <remarks>Provides a complete object for all known concerts</remarks>
         /// <returns>Return a list of Concerts</returns>
         [HttpGet(Name = "Concerts_GetAllConcerts")]
-        [SwaggerResponse((int)HttpStatusCode.OK, "List of concerts")]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available")]
-        [Produces("application/json")]
+        [SwaggerResponse((int)HttpStatusCode.OK, "List of concerts", typeof(IEnumerable<ConcertDto>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available", typeof(ProblemDetails))]
+        [Produces("application/json","application/problem+json")]
         public async Task<IActionResult> GetAllConcerts()
         {
             var concerts = await _concertsRepository.GetConcertsAsync();
@@ -45,10 +45,10 @@ namespace PaaS.Ticketing.Api.Controllers
         /// <remarks>Get information of a single concert</remarks>
         /// <returns>Return a single concert</returns>
         [HttpGet("{id}", Name = "Concerts_GetConcert")]
-        [SwaggerResponse((int)HttpStatusCode.OK, "Concert data object")]
-        [SwaggerResponse((int)HttpStatusCode.NotFound, "Concert not found")]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available")]
-        [Produces("application/json")]
+        [SwaggerResponse((int)HttpStatusCode.OK, "Concert data object", typeof(ConcertDto))]
+        [SwaggerResponse((int)HttpStatusCode.NotFound, "Concert not found", typeof(ProblemDetails))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available", typeof(ProblemDetails))]
+        [Produces("application/json", "application/problem+json")]
         public async Task<IActionResult> GetConcert(Guid id)
         {
             var concert = await _concertsRepository.GetConcertAsync(id);
@@ -60,11 +60,18 @@ namespace PaaS.Ticketing.Api.Controllers
             return Ok(result);
         }
 
+
+        /// <summary>
+        /// Get users of a concert
+        /// </summary>
+        /// <param name="id">Concert identifier</param>
+        /// <remarks>Get users of a single concert</remarks>
+        /// <returns>Return a list of users</returns>
         [HttpGet("{id}/users", Name = "Concerts_GetUsersOfConcert")]
-        [SwaggerResponse((int)HttpStatusCode.OK, "Users list")]
-        [SwaggerResponse((int)HttpStatusCode.NotFound, "Concert not found")]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available")]
-        [Produces("application/json")]
+        [SwaggerResponse((int)HttpStatusCode.OK, "Users list", typeof(UserDto))]
+        [SwaggerResponse((int)HttpStatusCode.NotFound, "Concert not found", typeof(ProblemDetails))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available", typeof(ProblemDetails))]
+        [Produces("application/json", "application/problem+json")]
         public async Task<IActionResult> GetUsersByConcert(Guid id)
         {
             var concert = await _concertsRepository.GetConcertAsync(id);

@@ -11,152 +11,314 @@
       "email": "support@ticketing.com"
     }
   },
+  "host": "readfromconfig.azurewebsites.net",
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
   "paths": {
     "/core/v1/concerts": {
       "get": {
-        "tags": [ "Concerts" ],
+        "tags": [
+          "Concerts"
+        ],
+        "summary": "Get concerts",
+        "description": "Provides a complete object for all known concerts",
         "operationId": "Concerts_GetAllConcerts",
-        "consumes": [],
-        "produces": [ "application/json" ],
-        "parameters": [],
+        "consumes": [
+
+        ],
+        "produces": [
+          "application/json",
+          "application/problem+json"
+        ],
+        "parameters": [
+
+        ],
         "responses": {
-          "200": { "description": "List of concerts" },
-          "500": { "description": "API is not available" }
+          "200": {
+            "description": "List of concerts",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Concert"
+              }
+            }
+          },
+          "500": {
+            "description": "API is not available",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
         }
       }
     },
     "/core/v1/concerts/{id}": {
       "get": {
-        "tags": [ "Concerts" ],
+        "tags": [
+          "Concerts"
+        ],
+        "summary": "Get single concert",
+        "description": "Get information of a single concert",
         "operationId": "Concerts_GetConcert",
-        "consumes": [],
-        "produces": [ "application/json" ],
+        "consumes": [
+
+        ],
+        "produces": [
+          "application/json",
+          "application/problem+json"
+        ],
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Concert identifier",
             "required": true,
             "type": "string",
             "format": "uuid"
           }
         ],
         "responses": {
-          "200": { "description": "Concert data object" },
+          "200": {
+            "description": "Concert data object",
+            "schema": {
+              "$ref": "#/definitions/Concert"
+            }
+          },
           "404": {
             "description": "Concert not found",
-            "schema": { "$ref": "#/definitions/ProblemDetails" }
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
           },
-          "500": { "description": "API is not available" }
+          "500": {
+            "description": "API is not available",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
         }
       }
     },
     "/core/v1/concerts/{id}/users": {
       "get": {
-        "tags": [ "Concerts" ],
+        "tags": [
+          "Concerts"
+        ],
+        "summary": "Get users of a concert",
+        "description": "Get users of a single concert",
         "operationId": "Concerts_GetUsersOfConcert",
-        "consumes": [],
-        "produces": [ "application/json" ],
+        "consumes": [
+
+        ],
+        "produces": [
+          "application/json",
+          "application/problem+json"
+        ],
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Concert identifier",
             "required": true,
             "type": "string",
             "format": "uuid"
           }
         ],
         "responses": {
-          "200": { "description": "Users list" },
+          "200": {
+            "description": "Users list",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
           "404": {
             "description": "Concert not found",
-            "schema": { "$ref": "#/definitions/ProblemDetails" }
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
           },
-          "500": { "description": "API is not available" }
+          "500": {
+            "description": "API is not available",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
         }
       }
     },
-    "/core/v1/orders/{token}": {
+    "/core/v1/orders/links/{token}": {
       "get": {
-        "tags": [ "Orders" ],
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Get single order",
+        "description": "Get information of a single order",
         "operationId": "Orders_GetOrderDetails",
-        "consumes": [],
-        "produces": [ "application/json" ],
+        "consumes": [
+
+        ],
+        "produces": [
+          "application/json",
+          "application/problem+json"
+        ],
         "parameters": [
           {
             "name": "token",
             "in": "path",
+            "description": "Ticket identifier",
             "required": true,
             "type": "string"
           }
         ],
         "responses": {
-          "200": { "description": "Order object" },
+          "200": {
+            "description": "Order object",
+            "schema": {
+              "$ref": "#/definitions/Order"
+            }
+          },
           "404": {
             "description": "Order  not found",
-            "schema": { "$ref": "#/definitions/ProblemDetails" }
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
           },
-          "500": { "description": "API is not available" }
+          "500": {
+            "description": "API is not available",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
         },
-        "security": [ { "Bearer": [] } ]
+        "security": [
+          {
+            "Bearer": [
+
+            ]
+          }
+        ]
       }
     },
     "/core/v1/orders": {
       "get": {
-        "tags": [ "Orders" ],
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Get orders",
+        "description": "Get list of orders",
         "operationId": "Orders_GetOrders",
-        "consumes": [],
-        "produces": [ "application/json" ],
+        "consumes": [
+
+        ],
+        "produces": [
+          "application/json",
+          "application/problem+json"
+        ],
         "parameters": [
           {
             "name": "status",
             "in": "query",
+            "description": "Indicates whether to return a specific status only",
             "required": false,
             "type": "string",
             "default": ""
           }
         ],
         "responses": {
-          "200": { "description": "Orders list" },
+          "200": {
+            "description": "Orders list",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Order"
+              }
+            }
+          },
           "404": {
             "description": "Orders  not found",
-            "schema": { "$ref": "#/definitions/ProblemDetails" }
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
           },
-          "500": { "description": "API is not available" }
+          "500": {
+            "description": "API is not available",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
         }
       },
       "post": {
-        "tags": [ "Orders" ],
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Place a new order",
+        "description": "Place new order",
         "operationId": "Orders_PlaceOrder",
-        "consumes": [ "application/json" ],
-        "produces": [ "text/plain", "application/json" ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json",
+          "application/problem+json"
+        ],
         "parameters": [
           {
             "name": "orderCreate",
             "in": "body",
+            "description": "Order json representation",
             "required": false,
-            "schema": { "$ref": "#/definitions/OrderCreateDto" }
+            "schema": {
+              "$ref": "#/definitions/OrderCreate"
+            }
           }
         ],
         "responses": {
-          "201": { "description": "Order created" },
+          "201": {
+            "description": "Order created",
+            "schema": {
+              "$ref": "#/definitions/OrderCreate"
+            }
+          },
           "404": {
             "description": "User or Concert not found",
-            "schema": { "$ref": "#/definitions/ProblemDetails" }
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
           },
-          "500": { "description": "API is not available" }
+          "500": {
+            "description": "API is not available",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
         }
       }
     },
     "/core/v1/orders/{id}": {
       "patch": {
-        "tags": [ "Orders" ],
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Update Order",
+        "description": "Update the order (incremental update with Json Patch)",
         "operationId": "Orders_UpdateIncrementalJsonPatch",
-        "consumes": [ "application/json-patch+json", "application/json", "text/json", "application/*+json" ],
-        "produces": [ "text/plain", "application/json" ],
+        "consumes": [
+          "application/json-patch+json"
+        ],
+        "produces": [
+          "application/json",
+          "application/problem+json"
+        ],
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Order identifier",
             "required": true,
             "type": "string",
             "format": "uuid"
@@ -164,34 +326,59 @@
           {
             "name": "order",
             "in": "body",
+            "description": "Operation to be performed on the Player in json-patch+json format",
             "required": false,
             "schema": {
               "uniqueItems": false,
               "type": "array",
-              "items": { "$ref": "#/definitions/Operation" }
+              "items": {
+                "$ref": "#/definitions/Operation"
+              }
             }
           }
         ],
         "responses": {
-          "204": { "description": "The data has been updated" },
+          "204": {
+            "description": "The data has been updated",
+            "schema": {
+              "$ref": "#/definitions/JsonPatchDocument"
+            }
+          },
           "404": {
             "description": "Order not found",
-            "schema": { "$ref": "#/definitions/ProblemDetails" }
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
           },
-          "500": { "description": "API is not available" }
+          "500": {
+            "description": "API is not available",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
         }
       }
     },
     "/core/v1/orders/{id}/state": {
       "post": {
-        "tags": [ "Orders" ],
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Update order status",
+        "description": "Update the order status",
         "operationId": "Orders_UpdateOrderStatus",
-        "consumes": [ "application/json-patch+json", "application/json", "text/json", "application/*+json" ],
-        "produces": [ "text/plain", "application/json" ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json",
+          "application/problem+json"
+        ],
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Order identifier",
             "required": true,
             "type": "string",
             "format": "uuid"
@@ -199,97 +386,254 @@
           {
             "name": "orderStatus",
             "in": "body",
+            "description": "Status object",
             "required": false,
-            "schema": { "$ref": "#/definitions/OrderStatusDto" }
+            "schema": {
+              "$ref": "#/definitions/OrderStatus"
+            }
           }
         ],
         "responses": {
-          "202": { "description": "Status change has been accepted. No response body" },
+          "202": {
+            "description": "Status change has been accepted. No response body",
+            "schema": {
+              "$ref": "#/definitions/OrderStatus"
+            }
+          },
           "404": {
             "description": "Order not found",
-            "schema": { "$ref": "#/definitions/ProblemDetails" }
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
           },
-          "500": { "description": "API is not available" }
+          "500": {
+            "description": "API is not available",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
         }
       }
     },
     "/core/v1/users": {
       "get": {
-        "tags": [ "Users" ],
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get concerts",
+        "description": "Provides a complete object for all known concerts",
         "operationId": "Users_GetAllUsers",
-        "consumes": [],
-        "produces": [ "application/json" ],
-        "parameters": [],
+        "consumes": [
+
+        ],
+        "produces": [
+          "application/json",
+          "application/problem+json"
+        ],
+        "parameters": [
+
+        ],
         "responses": {
-          "200": { "description": "List of users" },
-          "500": { "description": "API is not available" }
+          "200": {
+            "description": "List of users",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          },
+          "500": {
+            "description": "API is not available",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
         }
       },
       "post": {
-        "tags": [ "Users" ],
+        "tags": [
+          "Users"
+        ],
+        "summary": "Create a new User",
+        "description": "Create a new userr",
         "operationId": "Users_CreateUserProfile",
-        "consumes": [ "application/json" ],
-        "produces": [ "text/plain", "application/json" ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json",
+          "application/problem+json"
+        ],
         "parameters": [
           {
             "name": "user",
             "in": "body",
+            "description": "User json representation",
             "required": false,
-            "schema": { "$ref": "#/definitions/UserCreateDto" }
+            "schema": {
+              "$ref": "#/definitions/UserCreate"
+            }
           }
         ],
         "responses": {
-          "201": { "description": "User profile created" },
+          "201": {
+            "description": "User profile created",
+            "schema": {
+              "$ref": "#/definitions/UserCreate"
+            }
+          },
           "404": {
             "description": "User not found",
-            "schema": { "$ref": "#/definitions/ProblemDetails" }
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
           },
-          "500": { "description": "API is not available" }
+          "500": {
+            "description": "API is not available",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
         }
       }
     },
     "/core/v1/users/{id}": {
       "get": {
-        "tags": [ "Users" ],
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get single user",
+        "description": "Get information of a single user",
         "operationId": "Users_GetUserProfile",
-        "consumes": [],
-        "produces": [ "application/json" ],
+        "consumes": [
+
+        ],
+        "produces": [
+          "application/json",
+          "application/problem+json"
+        ],
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "User identifier",
             "required": true,
             "type": "string",
             "format": "uuid"
           }
         ],
         "responses": {
-          "200": { "description": "User profile object" },
+          "200": {
+            "description": "User profile object",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
           "404": {
             "description": "User not found",
-            "schema": { "$ref": "#/definitions/ProblemDetails" }
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
           },
-          "500": { "description": "API is not available" }
+          "500": {
+            "description": "API is not available",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
         }
       }
     }
   },
   "definitions": {
+    "Concert": {
+      "type": "object",
+      "properties": {
+        "concertId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "price": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "location": {
+          "type": "string"
+        },
+        "from": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "to": {
+          "format": "date-time",
+          "type": "string"
+        }
+      }
+    },
     "ProblemDetails": {
       "type": "object",
       "properties": {
-        "type": { "type": "string" },
-        "title": { "type": "string" },
+        "type": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
         "status": {
           "format": "int32",
           "type": "integer"
         },
-        "detail": { "type": "string" },
-        "instance": { "type": "string" }
+        "detail": {
+          "type": "string"
+        },
+        "instance": {
+          "type": "string"
+        }
       },
-      "additionalProperties": { "type": "object" }
+      "additionalProperties": {
+        "type": "object"
+      }
     },
-    "OrderCreateDto": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "format": "uuid",
+          "type": "string"
+        }
+      }
+    },
+    "Order": {
+      "type": "object",
+      "properties": {
+        "orderId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "eventName": {
+          "type": "string"
+        },
+        "attendee": {
+          "type": "string"
+        },
+        "ticketDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "OrderCreate": {
       "type": "object",
       "properties": {
         "userId": {
@@ -309,23 +653,56 @@
     "Operation": {
       "type": "object",
       "properties": {
-        "value": { "type": "object" },
-        "path": { "type": "string" },
-        "op": { "type": "string" },
-        "from": { "type": "string" }
+        "value": {
+          "type": "object"
+        },
+        "path": {
+          "type": "string"
+        },
+        "op": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string"
+        }
       }
     },
-    "OrderStatusDto": {
-      "type": "object",
-      "properties": { "status": { "type": "string" } }
-    },
-    "UserCreateDto": {
+    "JsonPatchDocument": {
       "type": "object",
       "properties": {
-        "firstname": { "type": "string" },
-        "lastname": { "type": "string" },
-        "email": { "type": "string" },
-        "phone": { "type": "string" }
+        "operations": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Operation"
+          },
+          "readOnly": true
+        }
+      }
+    },
+    "OrderStatus": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "UserCreate": {
+      "type": "object",
+      "properties": {
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        }
       }
     }
   },
@@ -337,5 +714,7 @@
       "description": "Please enter into field the word 'Bearer' following by space and JWT token"
     }
   },
-  "tags": []
+  "tags": [
+
+  ]
 }

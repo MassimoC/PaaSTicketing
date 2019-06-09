@@ -15,7 +15,7 @@ namespace PaaS.Ticketing.Api.Controllers
         [HttpGet(Name = "Health_Get")]
         [ApiExplorerSettings(IgnoreApi = true)]
         [SwaggerResponse((int)HttpStatusCode.OK, "Runtime is up and running in a healthy state")]
-        [SwaggerResponse((int)HttpStatusCode.ServiceUnavailable, "Runtime is not healthy")]
+        [SwaggerResponse((int)HttpStatusCode.ServiceUnavailable, "Runtime is not healthy", typeof(ProblemDetails))]
 
         public IActionResult Get()
         {

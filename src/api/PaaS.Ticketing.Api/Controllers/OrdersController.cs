@@ -24,6 +24,9 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using LoggingContext = PaaS.Ticketing.Events.Logging.Constants;
 using PaaS.Ticketing.Api.Factories;
+using System.Diagnostics;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
 
 namespace PaaS.Ticketing.Api.Controllers
 {
@@ -50,12 +53,11 @@ namespace PaaS.Ticketing.Api.Controllers
         /// <param name="token">Ticket identifier</param>
         /// <remarks>Get information of a single order</remarks>
         /// <returns>Return an order</returns>
-        [HttpGet("{token}", Name = "Orders_GetOrderDetails")]
-        [SwaggerResponse((int)HttpStatusCode.OK, "Order object")]
-        [SwaggerResponse((int)HttpStatusCode.NotFound, "Order  not found")]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available")]
-        [LogBodyActionFilter]
-        [Produces("application/json")]
+        [HttpGet("links/{token}", Name = "Orders_GetOrderDetails")]
+        [SwaggerResponse((int)HttpStatusCode.OK, "Order object", typeof(OrderDto))]
+        [SwaggerResponse((int)HttpStatusCode.NotFound, "Order  not found", typeof(ProblemDetails))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available", typeof(ProblemDetails))]
+        [Produces("application/json", "application/problem+json")]
         [Authorize]
         public async Task<IActionResult> GetOrderDetails(String token)
         {
@@ -75,10 +77,10 @@ namespace PaaS.Ticketing.Api.Controllers
         /// <remarks>Get list of orders</remarks>
         /// <returns>Return list of orders</returns>
         [HttpGet(Name = "Orders_GetOrders")]
-        [SwaggerResponse((int)HttpStatusCode.OK, "Orders list")]
-        [SwaggerResponse((int)HttpStatusCode.NotFound, "Orders  not found")]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available")]
-        [Produces("application/json")]
+        [SwaggerResponse((int)HttpStatusCode.OK, "Orders list", typeof(IEnumerable<OrderDto>))]
+        [SwaggerResponse((int)HttpStatusCode.NotFound, "Orders  not found", typeof(ProblemDetails))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available", typeof(ProblemDetails))]
+        [Produces("application/json", "application/problem+json")]
         public async Task<IActionResult> GetOrders([FromQuery(Name = "status")]string status = "")
         {
             _logger.LogInformation("API - Order controller - GetOrders");
@@ -95,19 +97,15 @@ namespace PaaS.Ticketing.Api.Controllers
         /// <remarks>Place new order</remarks>
         /// <returns>Return the order details</returns>
         [HttpPost(Name = "Orders_PlaceOrder")]
-        [SwaggerResponse((int)HttpStatusCode.Created, "Order created")]
-        [SwaggerResponse((int)HttpStatusCode.NotFound, "User or Concert not found")]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available")]
+        [SwaggerResponse((int)HttpStatusCode.Created, "Order created", typeof(OrderCreateDto))]
+        [SwaggerResponse((int)HttpStatusCode.NotFound, "User or Concert not found", typeof(ProblemDetails))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available", typeof(ProblemDetails))]
         [Consumes("application/json")]
-        [LogBodyActionFilter]
+        [Produces("application/json", "application/problem+json")]
         public async Task<IActionResult> PlaceOrder([FromBody] OrderCreateDto orderCreate)
         {
-            //TODO dependency tracking
-            //var telemetryClient = _telemetryClientFactory.Create();
-            //var dependencyLogging = telemetryClient.StartExternalApiDependencyTelemetry("PartnerAPI_UserIdentification", correlationId, new[] { (nameof(partnerCode), partnerCode),
-            //                                                                                        (nameof(serviceCode), serviceCode),
-            //                                                                                        (nameof(language), language),
-            //                                                                                        (nameof(redirectUrl), redirectUrl)});
+            // dependency tracking
+            var telemetryClient = _telemetryClientFactory.Create();
 
             _logger.LogInformation("API - Order controller - PlaceOrders");
             ConcertUser entityConcertUser;
@@ -127,35 +125,54 @@ namespace PaaS.Ticketing.Api.Controllers
             var orderDb = await _ordersRepository.GetOrderAsync(entityConcertUser.Token);
             var orderDto = Mapper.Map<DTOs.OrderDto>(orderDb);
 
-            // drop message in the queue
-            _logger.LogInformation($"Drop message in the queue");
-            var pub = new Publisher("q-payment-in", _configuration.GetConnectionString(name: "ServiceBus"));
-            var cloudEvent = new CloudEvent("command://order.pay",new Uri("app://ticketing.api"))
+            // dependency tracking
+            var current = Activity.Current;
+            var requestActivity = new Activity("Drop order.pay");
+            var requestOperation = telemetryClient.StartOperation<RequestTelemetry>(requestActivity);
+            try
             {
-                Id = Guid.NewGuid().ToString(),
-                ContentType = new ContentType(MediaTypeNames.Application.Json),
-                Data = JsonConvert.SerializeObject(new PaymentContext()
-                {
-                    Attendee = orderDto.Attendee,
-                    OrderId = orderDto.OrderId.ToString(),
-                    Token = orderDto.Token,
-                })
-            };
-            
-            _logger.LogInformation(new EventId((int)LoggingContext.EventId.Processing),
-                                  LoggingContext.Template,
-                                  "cloud event publishing [command://order.pay]",
-                                  LoggingContext.EntityType.Order.ToString(),
-                                  LoggingContext.EventId.Processing.ToString(),
-                                  LoggingContext.Status.Pending.ToString(),                                
-                                  "correlationId",
-                                  LoggingContext.CheckPoint.Publisher.ToString(),
-                                  "long description");
+                // drop message in the queue
+                _logger.LogInformation($"Drop message in the queue");
 
-            _logger.LogInformation("COMMAND - Sending message to the bus.");
-            var jsonFormatter = new JsonEventFormatter();
-            var messageBody = jsonFormatter.EncodeStructuredEvent(cloudEvent, out var contentType);
-            await pub.SendMessagesAsync(Encoding.UTF8.GetString(messageBody));
+                var pub = new Publisher("q-payment-in", _configuration.GetConnectionString(name: "ServiceBus"));
+                var cloudEvent = new CloudEvent("command://order.pay", new Uri("app://ticketing.api"))
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ContentType = new ContentType(MediaTypeNames.Application.Json),
+                    Data = JsonConvert.SerializeObject(new PaymentContext()
+                    {
+                        Attendee = orderDto.Attendee,
+                        OrderId = orderDto.OrderId.ToString(),
+                        Token = orderDto.Token,
+                    })
+                };
+
+                _logger.LogInformation(new EventId((int)LoggingContext.EventId.Processing),
+                                      LoggingContext.Template,
+                                      "cloud event publishing [command://order.pay]",
+                                      LoggingContext.EntityType.Order.ToString(),
+                                      LoggingContext.EventId.Processing.ToString(),
+                                      LoggingContext.Status.Pending.ToString(),
+                                      "correlationId",
+                                      LoggingContext.CheckPoint.Publisher.ToString(),
+                                      "long description");
+
+                _logger.LogInformation("COMMAND - Sending message to the bus.");
+                var jsonFormatter = new JsonEventFormatter();
+                var messageBody = jsonFormatter.EncodeStructuredEvent(cloudEvent, out var contentType);
+                await pub.SendMessagesAsync(Encoding.UTF8.GetString(messageBody));
+            }
+            catch (Exception ex)
+            {
+                // dependency tracking
+                telemetryClient.TrackException(ex);
+                throw;
+            }
+            finally
+            {
+                // dependency tracking
+                telemetryClient.StopOperation(requestOperation);
+            }
 
             _logger.LogInformation($"Returning order token '{entityConcertUser.Token}'");
             return CreatedAtRoute("Orders_GetOrderDetails",
@@ -171,9 +188,11 @@ namespace PaaS.Ticketing.Api.Controllers
         /// <remarks>Update the order (incremental update with Json Patch)</remarks>
         /// <returns>Acknowledge the object has been updated</returns>
         [HttpPatch("{id}", Name = "Orders_UpdateIncrementalJsonPatch")]
-        [SwaggerResponse((int)HttpStatusCode.NoContent, "The data has been updated")]
-        [SwaggerResponse((int)HttpStatusCode.NotFound, "Order not found")]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available")]
+        [SwaggerResponse((int)HttpStatusCode.NoContent, "The data has been updated", typeof(JsonPatchDocument))]
+        [SwaggerResponse((int)HttpStatusCode.NotFound, "Order not found", typeof(ProblemDetails))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available", typeof(ProblemDetails))]
+        [Consumes("application/json-patch+json")]
+        [Produces("application/json", "application/problem+json")]
         public async Task<IActionResult> UpdateIncrementalJsonPatch(Guid id, [FromBody]JsonPatchDocument<OrderDto> order)
         {
             _logger.LogInformation("API - Order controller - UpdateIncrementalJsonPatch");
@@ -202,9 +221,11 @@ namespace PaaS.Ticketing.Api.Controllers
         /// <remarks>Update the order status</remarks>
         /// <returns>Accepted</returns>
         [HttpPost("{id}/state", Name = "Orders_UpdateOrderStatus")]
-        [SwaggerResponse((int)HttpStatusCode.Accepted, "Status change has been accepted. No response body")]
-        [SwaggerResponse((int)HttpStatusCode.NotFound, "Order not found")]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available")]
+        [SwaggerResponse((int)HttpStatusCode.Accepted, "Status change has been accepted. No response body", typeof(OrderStatusDto))]
+        [SwaggerResponse((int)HttpStatusCode.NotFound, "Order not found", typeof(ProblemDetails))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available", typeof(ProblemDetails))]
+        [Consumes("application/json")]
+        [Produces("application/json", "application/problem+json")]
         public async Task<IActionResult> ChangeOrderStatus(Guid id, [FromBody]OrderStatusDto orderStatus)
         {
             _logger.LogInformation("API - Order controller - ChangeOrderStatus");

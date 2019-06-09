@@ -22,6 +22,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
 using PaaS.Ticketing.Api.Filters;
 using System;
+using PaaS.Ticketing.Api.OpenApi;
 
 namespace PaaS.Ticketing.Api.Extensions
 {
@@ -116,7 +117,6 @@ namespace PaaS.Ticketing.Api.Extensions
                     }
                 }
                 cfg.Filters.Add(typeof(LogBodyActionFilter));
-                cfg.Filters.Add(typeof(LoggingFilterAttribute));
             })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(opt =>
@@ -165,6 +165,8 @@ namespace PaaS.Ticketing.Api.Extensions
                         Type = "apiKey"
                     });
                 swaggerGenOptions.OperationFilter<SecurityRequirementsOperationFilter>();
+                swaggerGenOptions.DocumentFilter<OpenApiDocumentFilter>();
+
                 //swaggerGenOptions.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
                 //{
                 //    //{ "oauth2", new[] { "orders:write", "users:write" } }
@@ -175,6 +177,8 @@ namespace PaaS.Ticketing.Api.Extensions
                 {
                     swaggerGenOptions.IncludeXmlComments(xmlDocumentationPath);
                 }
+
+                swaggerGenOptions.CustomSchemaIds(publicSchemaIds);
             });
 
         }
@@ -210,9 +214,17 @@ namespace PaaS.Ticketing.Api.Extensions
             }
 
             var contentRootPath = ((IHostingEnvironment)hostingEnvironment.ImplementationInstance).ContentRootPath;
-            var xmlDocumentationPath = $"{contentRootPath}/Open-Api-Docs.xml";
+            var xmlDocumentationPath = $"{contentRootPath}/OpenApi-Docs.xml";
 
             return File.Exists(xmlDocumentationPath) ? xmlDocumentationPath : string.Empty;
+        }
+
+        private static string publicSchemaIds(Type currentClass)
+        {
+            string returnedValue = currentClass.Name;
+            if (returnedValue.EndsWith("Dto"))
+                returnedValue = returnedValue.Replace("Dto", string.Empty);
+            return returnedValue;
         }
     }
 }

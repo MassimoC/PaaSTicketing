@@ -7,5 +7,5 @@ apiVersionSet:
     versioningScheme: Segment
 api:
   name: eventpass 
-outputLocation: C:\GIT\ticketing-paas\PaaS.Ticketing\apimanagement
+outputLocation: 
 linked: false

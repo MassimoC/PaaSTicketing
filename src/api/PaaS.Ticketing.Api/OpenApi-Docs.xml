@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PaaS.Ticketing.Api</name>
+    </assembly>
+    <members>
+        <member name="M:PaaS.Ticketing.Api.Controllers.ConcertsController.GetAllConcerts">
+            <summary>
+            Get concerts
+            </summary>
+            <remarks>Provides a complete object for all known concerts</remarks>
+            <returns>Return a list of Concerts</returns>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Controllers.ConcertsController.GetConcert(System.Guid)">
+            <summary>
+            Get single concert
+            </summary>
+            <param name="id">Concert identifier</param>
+            <remarks>Get information of a single concert</remarks>
+            <returns>Return a single concert</returns>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Controllers.ConcertsController.GetUsersByConcert(System.Guid)">
+            <summary>
+            Get users of a concert
+            </summary>
+            <param name="id">Concert identifier</param>
+            <remarks>Get users of a single concert</remarks>
+            <returns>Return a list of users</returns>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Controllers.ErrorController.Error(System.Int32)">
+            <summary>
+            Manages the unmatched routes
+            </summary>
+            <param name="code">HTTP status code</param>
+            <returns>Error formatted as application/problem+json</returns>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Controllers.HealthController.Get">
+            <summary>
+                Get Health
+            </summary>
+            <remarks>Provides an indication about the health of the runtime</remarks>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Controllers.OrdersController.GetOrderDetails(System.String)">
+            <summary>
+            Get single order
+            </summary>
+            <param name="token">Ticket identifier</param>
+            <remarks>Get information of a single order</remarks>
+            <returns>Return an order</returns>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Controllers.OrdersController.GetOrders(System.String)">
+            <summary>
+            Get orders
+            </summary>
+            <param name="status">Indicates whether to return a specific status only</param>
+            <remarks>Get list of orders</remarks>
+            <returns>Return list of orders</returns>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Controllers.OrdersController.PlaceOrder(PaaS.Ticketing.Api.DTOs.OrderCreateDto)">
+            <summary>
+            Place a new order
+            </summary>
+            <param name="orderCreate">Order json representation</param>
+            <remarks>Place new order</remarks>
+            <returns>Return the order details</returns>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Controllers.OrdersController.UpdateIncrementalJsonPatch(System.Guid,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{PaaS.Ticketing.Api.DTOs.OrderDto})">
+            <summary>
+            Update Order
+            </summary>
+            <param name="id">Order identifier</param>
+            <param name="order">Operation to be performed on the Player in json-patch+json format</param>
+            <remarks>Update the order (incremental update with Json Patch)</remarks>
+            <returns>Acknowledge the object has been updated</returns>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Controllers.OrdersController.ChangeOrderStatus(System.Guid,PaaS.Ticketing.Api.DTOs.OrderStatusDto)">
+            <summary>
+            Update order status
+            </summary>
+            <param name="id">Order identifier</param>
+            <param name="orderStatus">Status object</param>
+            <remarks>Update the order status</remarks>
+            <returns>Accepted</returns>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Controllers.UsersController.GetAllUsers">
+            <summary>
+            Get users
+            </summary>
+            <remarks>Provides a complete object for all known users</remarks>
+            <returns>Return a list of Concerts</returns>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Controllers.UsersController.GetUserProfile(System.Guid)">
+            <summary>
+            Get single user
+            </summary>
+            <param name="id">User identifier</param>
+            <remarks>Get information of a single user</remarks>
+            <returns>Return a single user</returns>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Controllers.UsersController.CreateUserProfile(PaaS.Ticketing.Api.DTOs.UserCreateDto)">
+            <summary>
+            Create a new User
+            </summary>
+            <param name="user">User json representation</param>
+            <remarks>Create a new userr</remarks>
+            <returns>Return the new user</returns>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Extensions.ApplicationBuilderExtensions.UseOpenApi(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+                Configure to use OpenAPI with UI
+            </summary>
+            <param name="applicationbuilder">Application builder to use</param>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Extensions.ApplicationBuilderExtensions.UseExceptionHandlerWithProblemJson(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+                Configure to use global exception handler with application/problem+json
+            </summary>
+            <param name="applicationBuilder">Application builder to use</param>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Extensions.HttpExtensions.IsLocalRequest(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+                Determines if the request was made locally or not
+            </summary>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Extensions.HttpExtensions.WriteJson``1(Microsoft.AspNetCore.Http.HttpResponse,``0,System.String)">
+            <summary>
+                Write a JSON response
+            </summary>
+            <typeparam name="TResponse">Type of the response message to serizalize</typeparam>
+            <param name="response">Http response</param>
+            <param name="responseObject">Response object to serialize</param>
+            <param name="contentType">Content type</param>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Extensions.ServiceCollectionExtensions.ConfigureDatabase(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+                Configure database
+            </summary>
+            <param name="services">Collections of services in application</param>
+            <param name="configuration">Configuration properties</param>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Extensions.ServiceCollectionExtensions.ConfigureInvalidStateHandling(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+                Configure how to handle invalid state with problem+json
+            </summary>
+            <param name="services">Collections of services in application</param>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Extensions.ServiceCollectionExtensions.ConfigureMvc(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+                Configure the MVC stack
+            </summary>
+            <param name="services">Collections of services in application</param>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Extensions.ServiceCollectionExtensions.ConfigureOpenApiGeneration(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+                Configure OpenAPI generation
+            </summary>
+            <param name="services">Collections of services in application</param>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Extensions.ServiceCollectionExtensions.ConfigureRouting(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+                Configure routing
+            </summary>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Extensions.ServiceCollectionExtensions.ConfigureAI(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+                Configure application Insights
+            </summary>
+        </member>
+        <member name="T:PaaS.Ticketing.Api.Extensions.TelemetryClientExtensions">
+            <summary>
+            Telemetry Client extensions
+            </summary>
+        </member>
+        <member name="T:PaaS.Ticketing.Api.OpenApi.OpenApiDocumentFilter">
+            <summary>
+            OpenApi document filter
+            </summary>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.OpenApi.OpenApiDocumentFilter.Apply(Swashbuckle.AspNetCore.Swagger.SwaggerDocument,Swashbuckle.AspNetCore.SwaggerGen.DocumentFilterContext)">
+            <summary>
+            Host, base path and schemes configuration
+            </summary>
+            <param name="swaggerDoc"></param>
+            <param name="context"></param>
+        </member>
+    </members>
+</doc>

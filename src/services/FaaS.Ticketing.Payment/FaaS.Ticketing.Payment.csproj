@@ -5,6 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CloudNative.CloudEvents" Version="0.1.23" />
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.10.0" />
     <PackageReference Include="Microsoft.Azure.WebJobs" Version="3.0.6" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.ServiceBus" Version="3.0.4" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.26" />
