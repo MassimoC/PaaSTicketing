@@ -48,6 +48,26 @@ namespace PaaS.Ticketing.Api.Controllers
         }
 
         /// <summary>
+        /// Get single order (id)
+        /// </summary>
+        /// <param name="id">Order identifier</param>
+        /// <remarks>Search order by Id</remarks>
+        /// <returns>Return an order</returns>
+        [HttpGet("{id}", Name = "Orders_GetOrderById")]
+        [SwaggerResponse((int)HttpStatusCode.OK, "Order object", typeof(OrderDto))]
+        [SwaggerResponse((int)HttpStatusCode.NotFound, "Order  not found", typeof(ProblemDetails))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available", typeof(ProblemDetails))]
+        [Produces("application/json", "application/problem+json")]
+        public async Task<IActionResult> GetOrderById(Guid id)
+        {
+            _logger.LogInformation("API - Order controller - GetOrderById");
+
+            var orderDb = await _ordersRepository.GetOrderByIdAsync(id);
+            var result = Mapper.Map<OrderDto>(orderDb);
+            return Ok(result);
+        }
+
+        /// <summary>
         /// Get single order
         /// </summary>
         /// <param name="token">Ticket identifier</param>
@@ -97,7 +117,7 @@ namespace PaaS.Ticketing.Api.Controllers
         /// <remarks>Place new order</remarks>
         /// <returns>Return the order details</returns>
         [HttpPost(Name = "Orders_PlaceOrder")]
-        [SwaggerResponse((int)HttpStatusCode.Created, "Order created", typeof(OrderCreateDto))]
+        [SwaggerResponse((int)HttpStatusCode.Created, "Order created", typeof(OrderDto))]
         [SwaggerResponse((int)HttpStatusCode.NotFound, "User or Concert not found", typeof(ProblemDetails))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available", typeof(ProblemDetails))]
         [Consumes("application/json")]
@@ -127,7 +147,7 @@ namespace PaaS.Ticketing.Api.Controllers
 
             // dependency tracking
             var current = Activity.Current;
-            var requestActivity = new Activity("Drop order.pay");
+            var requestActivity = new Activity("command://order.pay");
             var requestOperation = telemetryClient.StartOperation<RequestTelemetry>(requestActivity);
             try
             {
@@ -177,7 +197,7 @@ namespace PaaS.Ticketing.Api.Controllers
             _logger.LogInformation($"Returning order token '{entityConcertUser.Token}'");
             return CreatedAtRoute("Orders_GetOrderDetails",
                 new { token = entityConcertUser.Token },
-                entityConcertUser);
+                orderDto);
         }
 
         /// <summary>

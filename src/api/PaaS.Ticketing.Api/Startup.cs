@@ -10,6 +10,8 @@ using PaaS.Ticketing.Api.Context;
 using PaaS.Ticketing.Api.Extensions;
 using PaaS.Ticketing.Api.Factories;
 using PaaS.Ticketing.Api.Middlewares;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace PaaS.Ticketing.Api
 {

@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  ticketing.idp:
+    image: ${DOCKER_REGISTRY-}ticketingidp
+    build:
+      context: .
+      dockerfile: identity/Ticketing.Idp/Dockerfile
+
+  paas.ticketing.api:
+    image: ${DOCKER_REGISTRY-}paasticketingapi
+    build:
+      context: .
+      dockerfile: api/PaaS.Ticketing.Api/Dockerfile
+

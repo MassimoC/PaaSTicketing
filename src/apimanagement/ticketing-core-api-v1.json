@@ -11,7 +11,6 @@
       "email": "support@ticketing.com"
     }
   },
-  "host": "readfromconfig.azurewebsites.net",
   "basePath": "/",
   "schemes": [
     "https"
@@ -136,6 +135,111 @@
           },
           "404": {
             "description": "Concert not found",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "500": {
+            "description": "API is not available",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      }
+    },
+    "/core/v1/orders/{id}": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Get single order (id)",
+        "description": "Search order by Id",
+        "operationId": "Orders_GetOrderById",
+        "consumes": [
+
+        ],
+        "produces": [
+          "application/json",
+          "application/problem+json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Order identifier",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order object",
+            "schema": {
+              "$ref": "#/definitions/Order"
+            }
+          },
+          "404": {
+            "description": "Order  not found",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "500": {
+            "description": "API is not available",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Update Order",
+        "description": "Update the order (incremental update with Json Patch)",
+        "operationId": "Orders_UpdateIncrementalJsonPatch",
+        "consumes": [
+          "application/json-patch+json"
+        ],
+        "produces": [
+          "application/json",
+          "application/problem+json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Order identifier",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "name": "order",
+            "in": "body",
+            "description": "Operation to be performed on the Player in json-patch+json format",
+            "required": false,
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Operation"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The data has been updated",
+            "schema": {
+              "$ref": "#/definitions/JsonPatchDocument"
+            }
+          },
+          "404": {
+            "description": "Order not found",
             "schema": {
               "$ref": "#/definitions/ProblemDetails"
             }
@@ -281,71 +385,11 @@
           "201": {
             "description": "Order created",
             "schema": {
-              "$ref": "#/definitions/OrderCreate"
+              "$ref": "#/definitions/Order"
             }
           },
           "404": {
             "description": "User or Concert not found",
-            "schema": {
-              "$ref": "#/definitions/ProblemDetails"
-            }
-          },
-          "500": {
-            "description": "API is not available",
-            "schema": {
-              "$ref": "#/definitions/ProblemDetails"
-            }
-          }
-        }
-      }
-    },
-    "/core/v1/orders/{id}": {
-      "patch": {
-        "tags": [
-          "Orders"
-        ],
-        "summary": "Update Order",
-        "description": "Update the order (incremental update with Json Patch)",
-        "operationId": "Orders_UpdateIncrementalJsonPatch",
-        "consumes": [
-          "application/json-patch+json"
-        ],
-        "produces": [
-          "application/json",
-          "application/problem+json"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Order identifier",
-            "required": true,
-            "type": "string",
-            "format": "uuid"
-          },
-          {
-            "name": "order",
-            "in": "body",
-            "description": "Operation to be performed on the Player in json-patch+json format",
-            "required": false,
-            "schema": {
-              "uniqueItems": false,
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Operation"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "The data has been updated",
-            "schema": {
-              "$ref": "#/definitions/JsonPatchDocument"
-            }
-          },
-          "404": {
-            "description": "Order not found",
             "schema": {
               "$ref": "#/definitions/ProblemDetails"
             }
@@ -420,8 +464,8 @@
         "tags": [
           "Users"
         ],
-        "summary": "Get concerts",
-        "description": "Provides a complete object for all known concerts",
+        "summary": "Get users",
+        "description": "Provides a complete object for all known users",
         "operationId": "Users_GetAllUsers",
         "consumes": [
 
@@ -633,23 +677,6 @@
         }
       }
     },
-    "OrderCreate": {
-      "type": "object",
-      "properties": {
-        "userId": {
-          "format": "uuid",
-          "type": "string"
-        },
-        "concertId": {
-          "format": "uuid",
-          "type": "string"
-        },
-        "ticketDate": {
-          "format": "date-time",
-          "type": "string"
-        }
-      }
-    },
     "Operation": {
       "type": "object",
       "properties": {
@@ -677,6 +704,23 @@
             "$ref": "#/definitions/Operation"
           },
           "readOnly": true
+        }
+      }
+    },
+    "OrderCreate": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "concertId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "ticketDate": {
+          "format": "date-time",
+          "type": "string"
         }
       }
     },

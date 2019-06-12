@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using PaaS.Ticketing.Api.Models;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace PaaS.Ticketing.Api.Middlewares
@@ -50,7 +51,10 @@ namespace PaaS.Ticketing.Api.Middlewares
             if (context == null) throw new System.ArgumentNullException(nameof(context));
 
             if (string.IsNullOrWhiteSpace(context.Request.Headers[CORRELATION_ID_HEADER_NAME]))
-                context.Request.Headers[CORRELATION_ID_HEADER_NAME] = Guid.NewGuid().ToString();
+            { 
+                context.Request.Headers.Add(CORRELATION_ID_HEADER_NAME, Guid.NewGuid().ToString());
+                context.Response.Headers.Add("Request-Id", Activity.Current.Id);
+            }
 
             return context.Request.Headers[CORRELATION_ID_HEADER_NAME];
         }

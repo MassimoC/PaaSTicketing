@@ -40,6 +40,14 @@
             </summary>
             <remarks>Provides an indication about the health of the runtime</remarks>
         </member>
+        <member name="M:PaaS.Ticketing.Api.Controllers.OrdersController.GetOrderById(System.Guid)">
+            <summary>
+            Get single order (id)
+            </summary>
+            <param name="id">Order identifier</param>
+            <remarks>Search order by Id</remarks>
+            <returns>Return an order</returns>
+        </member>
         <member name="M:PaaS.Ticketing.Api.Controllers.OrdersController.GetOrderDetails(System.String)">
             <summary>
             Get single order

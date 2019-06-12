@@ -8,8 +8,10 @@ namespace FaaS.Ticketing.Shipping
     public static class fx_invoice_printing
     {
         [FunctionName("fx_invoice_printing")]
-        public static async Task<string> PrintInvoiceAsync([ActivityTrigger] string orderId, ILogger log)
+        public static async Task<string> PrintInvoiceAsync([ActivityTrigger] DurableActivityContext inputs, ILogger log)
         {
+            var (orderId, parentId) = inputs.GetInput<(string, string)>();
+
             log.LogInformation($" >>>>>> Printing invoice for the order {orderId}. <<<<<<");
             // TODO save document to blob storage
             await Task.Delay(TimeSpan.FromSeconds(10));

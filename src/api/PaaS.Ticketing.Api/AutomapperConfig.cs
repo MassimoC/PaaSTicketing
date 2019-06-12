@@ -35,6 +35,7 @@ namespace PaaS.Ticketing.Api
                         mapperConfig.CreateMap<Entities.ConcertUser, DTOs.OrderDto>()
                             .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.ConcertUserId))
                             .ForMember(dest => dest.EventName, opt => opt.MapFrom(src => src.Concert.Name))
+                            .ForMember(dest => dest.TicketDate, opt => opt.MapFrom(src => src.DateRegistration))
                             .ForMember(dest => dest.Attendee, opt => opt.MapFrom(src => String.Format("{0} {1}", src.User.Firstname, src.User.Lastname)));
                     });
                     _initialized = true;

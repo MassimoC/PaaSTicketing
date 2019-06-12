@@ -1,9 +1,13 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Mime;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CloudNative.CloudEvents;
+using FaaS.Ticketing.Shipping.Models;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -13,6 +17,8 @@ namespace FaaS.Ticketing.Shipping
 {
     public static class ox_shipping_orchestrator
     {
+        private static Activity _currentActivity;
+        private static TelemetryClient _telemetryClient = new TelemetryClient(TelemetryConfiguration.Active);
 
         /// <summary>
         /// Orchestrator Client
@@ -22,12 +28,13 @@ namespace FaaS.Ticketing.Shipping
         /// <param name="starter">Client</param>
         /// <param name="log">Logger</param>
         /// <returns></returns>
-        [FunctionName("ox_shipping_orchestrator_SbQueueStart")]
+        [FunctionName("ox_shipping_orchestrator_sbtrigger")]
         public static async Task SBQueueStart(
             [ServiceBusTrigger("q-shipping-in", Connection = "SB-Queue-In-AppSettings")] string paymentItem,
             [OrchestrationClient] DurableOrchestrationClient starter,
             ILogger log)
         {
+            _currentActivity = Activity.Current;
 
             var jsonFormatter = new JsonEventFormatter();
             var inboundEvent = jsonFormatter.DecodeStructuredEvent(Encoding.UTF8.GetBytes(paymentItem));
@@ -56,16 +63,12 @@ namespace FaaS.Ticketing.Shipping
             {
                 string orderId = context.GetInput<string>();
 
-                // TODO parallel
-                var invoiceId = await context.CallActivityAsync<string>("fx_invoice_printing", orderId);
+                // Sequential
+                var invoiceId = await context.CallActivityAsync<string>("fx_invoice_printing", (orderId, _currentActivity.Id));
                 var labelId = await context.CallActivityAsync<string>("fx_package_labeling", orderId);
-                var notification = await context.CallActivityAsync<CloudEvent>("fx_complete_shipping", orderId);
+                var notification = await context.CallActivityAsync<CloudEvent>("fx_complete_shipping", (orderId, _currentActivity.Id));
 
-                // FAN-OUT
-                //Task<string> invoiceId = await context.CallActivityAsync<Task<string>>("fx_invoice_printing", orderId);
-                //Task<string> labelId = await context.CallActivityAsync<Task<string>>("fx_package_labeling", orderId);
-                //await Task.WhenAll(invoiceId, labelId);
-                               
+                // TODO parallel
             }
             catch (System.Exception)
             {

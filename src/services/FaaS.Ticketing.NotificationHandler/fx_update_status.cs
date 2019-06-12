@@ -52,7 +52,8 @@ namespace FaaS.Ticketing.NotificationHandler
             log.LogInformation($" Status to be changed for the object {notification.Id}  value: { notification.Status}");
 
             var httpContent = new StringContent(patchArray.ToString(), Encoding.UTF8, "application/json-patch+json");
-            var url = string.Format("https://localhost:44326/core/v1/orders/{0}", notification.Id);
+            // TODO parametrization missing
+            var url = string.Format("https://localhost:44328/core/v1/orders/{0}", notification.Id);
             //TODO add authentication
             //_httpClient.DefaultRequestHeaders.Authorization =new AuthenticationHeaderValue("Bearer", "to be added");
 

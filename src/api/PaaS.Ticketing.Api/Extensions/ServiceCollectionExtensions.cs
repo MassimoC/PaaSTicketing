@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Authorization;
 using PaaS.Ticketing.Api.Filters;
 using System;
 using PaaS.Ticketing.Api.OpenApi;
+using Microsoft.ApplicationInsights.Extensibility;
 
 namespace PaaS.Ticketing.Api.Extensions
 {
@@ -200,6 +201,7 @@ namespace PaaS.Ticketing.Api.Extensions
             {
                 EnableDebugLogger = false
             };
+            services.AddSingleton<ITelemetryInitializer, CloudRoleInitializer>();
             services.AddApplicationInsightsTelemetry(aiOptions);
             services.ConfigureTelemetryModule<Microsoft.ApplicationInsights.AspNetCore.RequestTrackingTelemetryModule>
                 ((req, o) => req.CollectionOptions.TrackExceptions = false);

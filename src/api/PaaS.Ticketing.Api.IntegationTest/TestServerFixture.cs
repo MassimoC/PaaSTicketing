@@ -24,12 +24,12 @@ namespace PaaS.Ticketing.Api.IntegationTest
                     config.AddEnvironmentVariables();
                 })
                 .UseEnvironment("Development")
-                .UseUrls("https://*:44326") 
+                .UseUrls("https://*:44328") 
                 .UseIISIntegration()
                 .UseStartup<Startup>());
 
             _httpClient = srv.CreateClient();
-            _httpClient.BaseAddress = new System.Uri("https://localhost:44326");
+            _httpClient.BaseAddress = new System.Uri("https://localhost:44328");
         }
     }
 

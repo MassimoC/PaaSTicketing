@@ -26,11 +26,19 @@ namespace PaaS.Ticketing.Api.Filters
                     _client.TrackTrace("-empty body-");
                     return;
                 }
-                using (var stream = new StreamReader(actionContext.HttpContext.Request.Body))
+                try
                 {
-                    stream.BaseStream.Position = 0;
-                    _client.TrackTrace("REQUEST BODY:" + JObject.Parse(stream.ReadToEnd()).ToString(Newtonsoft.Json.Formatting.None));
+                    using (var stream = new StreamReader(actionContext.HttpContext.Request.Body))
+                    {
+                        stream.BaseStream.Position = 0;
+                        _client.TrackTrace("REQUEST BODY:" + JObject.Parse(stream.ReadToEnd()).ToString(Newtonsoft.Json.Formatting.None));
+                    }
                 }
+                catch (System.Exception)
+                {
+                    // ignore
+                }
+ 
             }
         }
 
