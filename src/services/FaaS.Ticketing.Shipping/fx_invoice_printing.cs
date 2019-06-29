@@ -8,6 +8,7 @@ using System.IO;
 using System.Text;
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Azure.KeyVault;
+using PaaS.Ticketing.Security;
 
 namespace FaaS.Ticketing.Shipping
 {
@@ -20,16 +21,18 @@ namespace FaaS.Ticketing.Shipping
 
             var (orderId, parentId) = inputs.GetInput<(string, string)>();
             log.LogInformation($" >>>>>> Printing invoice for the order {orderId}. <<<<<<");
-            
-            var storageConnectionString = Environment.GetEnvironmentVariable("StorageConnectionString");
-            // TODO (Keyvault with MSI) for local debug (use the visualstudio user)
-            //storageConnectionString = GetSecretFromVault("ticketingsecure", "cn-storageaccount", log).Result;
 
-            // TODO ARCUS
-            //var vaultAuthenticator = new ManagedServiceIdentityAuthenticator();
-            //var vaultConfiguration = new KeyVaultConfiguration(keyVaultUri);
-            //var kvSecretProvider = new KeyVaultSecretProvider(vaultAuthenticator, vaultConfiguration)
-
+            var storageConnectionString = String.Empty;
+            // local debug uses visualstudio user as MSI
+            var securityVault = new VaultService(Environment.GetEnvironmentVariable("VaultName"););
+            try
+            {
+                storageConnectionString = securityVault.GetSecret("cn-storageaccount").Result;
+            }
+            catch (Exception)
+            {
+                storageConnectionString = Environment.GetEnvironmentVariable("StorageConnectionString");
+            }
 
             // save document to blob storage
             cloudStorageAccount = CloudStorageAccount.Parse(storageConnectionString);

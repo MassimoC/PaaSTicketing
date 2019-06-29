@@ -47,7 +47,7 @@ namespace FaaS.Ticketing.Payment
             var sbConnectionString = String.Empty;
             try
             {
-                sbConnectionString = securityVault.GetSecret("cn-storageaccount").Result;
+                sbConnectionString = securityVault.GetSecret("cn-servicebus").Result;
             }
             catch (Exception)
             {
