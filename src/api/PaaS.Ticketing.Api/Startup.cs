@@ -10,6 +10,7 @@ using PaaS.Ticketing.Api.Context;
 using PaaS.Ticketing.Api.Extensions;
 using PaaS.Ticketing.Api.Factories;
 using PaaS.Ticketing.Api.Middlewares;
+using PaaS.Ticketing.Security;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -53,6 +54,7 @@ namespace PaaS.Ticketing.Api
             services.ConfigureRouting();
             services.ConfigureInvalidStateHandling();
             services.AddSingleton<ITelemetryClientFactory, TelemetryClientFactory>();
+            services.AddSingleton<IVaultService>(new VaultService("ticketingsecure"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

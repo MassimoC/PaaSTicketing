@@ -40,6 +40,8 @@
     <None Include="infra-fx-durable.parameters.json" />
     <None Include="infra-fx.json" />
     <None Include="infra-fx.parameters.json" />
+    <None Include="infra-keyvault.json" />
+    <None Include="infra-keyvault.parameters.json" />
     <None Include="infra-servicebus.json" />
     <None Include="infra-servicebus.parameters.json" />
   </ItemGroup>

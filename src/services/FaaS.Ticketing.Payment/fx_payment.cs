@@ -14,6 +14,7 @@ using Microsoft.ApplicationInsights.Extensibility;
 using System.Diagnostics;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Channel;
+using PaaS.Ticketing.Security;
 
 namespace FaaS.Ticketing.Payment
 {
@@ -41,7 +42,17 @@ namespace FaaS.Ticketing.Payment
             .AddEnvironmentVariables()
             .Build();
 
-            var sbConnectionString = config["Values:SB-Queue-In-AppSettings"];
+            var securityVault = new VaultService(config["Values:VaultName"]);
+
+            var sbConnectionString = String.Empty;
+            try
+            {
+                sbConnectionString = securityVault.GetSecret("cn-storageaccount").Result;
+            }
+            catch (Exception)
+            {
+                sbConnectionString = config["Values:SB-Queue-In-AppSettings"];
+            }
 
             try
             {

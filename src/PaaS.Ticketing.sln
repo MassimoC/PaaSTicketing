@@ -52,6 +52,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{7A4357
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{E8444823-18BE-431E-B910-FEA61D6BCC57}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Security", "Security", "{1955FFAA-7A0C-4CAA-BC9D-7A2C254906F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaaS.Ticketing.Security", "security\PaaS.Ticketing.Security\PaaS.Ticketing.Security.csproj", "{E0211093-ABE3-43BE-B7E8-910B8ECF2902}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -106,6 +110,10 @@ Global
 		{E8444823-18BE-431E-B910-FEA61D6BCC57}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8444823-18BE-431E-B910-FEA61D6BCC57}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8444823-18BE-431E-B910-FEA61D6BCC57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0211093-ABE3-43BE-B7E8-910B8ECF2902}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0211093-ABE3-43BE-B7E8-910B8ECF2902}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0211093-ABE3-43BE-B7E8-910B8ECF2902}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0211093-ABE3-43BE-B7E8-910B8ECF2902}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -122,6 +130,7 @@ Global
 		{CA4573E2-78E2-4316-B83F-441BD0CEB2A4} = {12562158-8985-4172-B505-22EDB73D9282}
 		{D67D67AA-17D4-49EC-A290-EB30622D2405} = {12562158-8985-4172-B505-22EDB73D9282}
 		{7214E63C-BD93-4823-B2D6-07C8CC223F7A} = {115BF540-C1EA-4B5B-9C3E-69CC3AF5DB5E}
+		{E0211093-ABE3-43BE-B7E8-910B8ECF2902} = {1955FFAA-7A0C-4CAA-BC9D-7A2C254906F0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {215692DF-777A-45B9-A3AF-3D8BEACB7B3B}

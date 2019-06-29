@@ -1,0 +1,32 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "name": {
+      "value": "whatever222"
+    },
+    "sku": {
+      "value": "Standard"
+    },
+    "tenant": {
+      "value": "eb3c68b9-0935-4046-8550-8bcaa4167e2e"
+    },
+    "enabledForDeployment": {
+      "value": false
+    },
+    "enabledForTemplateDeployment": {
+      "value": false
+    },
+    "enabledForDiskEncryption": {
+      "value": false
+    },
+    "networkAcls": {
+      "value": {
+        "defaultAction": "Allow",
+        "bypass": "AzureServices",
+        "virtualNetworkRules": [],
+        "ipRules": []
+      }
+    }
+  }
+}

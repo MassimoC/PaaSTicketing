@@ -27,6 +27,7 @@ using PaaS.Ticketing.Api.Factories;
 using System.Diagnostics;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
+using PaaS.Ticketing.Security;
 
 namespace PaaS.Ticketing.Api.Controllers
 {
@@ -38,13 +39,19 @@ namespace PaaS.Ticketing.Api.Controllers
         private readonly ILogger _logger;
         private readonly IConfiguration _configuration;
         private readonly ITelemetryClientFactory _telemetryClientFactory;
+        private readonly IVaultService _vaultService;
 
-        public OrdersController(IOrdersRepository ordersRepository, ILogger<OrdersController> logger, IConfiguration configuration, ITelemetryClientFactory telemetryClientFactory)
+        public OrdersController(IOrdersRepository ordersRepository, 
+            ILogger<OrdersController> logger, 
+            IConfiguration configuration, 
+            ITelemetryClientFactory telemetryClientFactory,
+            IVaultService vaultService)
         {
             _ordersRepository = ordersRepository;
             _logger = logger;
             _configuration = configuration;
             _telemetryClientFactory = telemetryClientFactory;
+            _vaultService = vaultService;
         }
 
         /// <summary>
@@ -138,6 +145,10 @@ namespace PaaS.Ticketing.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
+                if (ex.InnerException.Message.Contains("PK_"))
+                {
+                    return BadRequest(new ProblemDetailsError(StatusCodes.Status400BadRequest, "Duplicate order."));
+                }
                 throw;
             }
 
@@ -154,7 +165,22 @@ namespace PaaS.Ticketing.Api.Controllers
                 // drop message in the queue
                 _logger.LogInformation($"Drop message in the queue");
 
-                var pub = new Publisher("q-payment-in", _configuration.GetConnectionString(name: "ServiceBus"));
+                //TODO KeyVault
+                var sbConnectionString = String.Empty;
+                try
+                {
+                    sbConnectionString = _vaultService.GetSecret("cn-storageaccount").Result;
+                }
+                catch (Exception ex)
+                {
+                    // TODO
+                    // MSI + docker not working in debug mode?
+                    var s = ex.Message;
+                    //throw;
+                }
+                if (String.IsNullOrEmpty(sbConnectionString)) sbConnectionString = _configuration.GetConnectionString(name: "ServiceBus");
+
+                var pub = new Publisher("q-payment-in", sbConnectionString);
                 var cloudEvent = new CloudEvent("command://order.pay", new Uri("app://ticketing.api"))
                 {
                     Id = Guid.NewGuid().ToString(),
