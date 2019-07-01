@@ -1,5 +1,6 @@
 # PaaS Ticketing
-Extremely simple PaaS ticketing system used as playground project. 
+Extremely simple PaaS ticketing system used as playground project.
+Powered by [Arcus](https://arcus-azure.net) and lot of copying and pasting from Stack Overflow.
 
 ![Scenario](./media/scenario.png)
 
@@ -97,3 +98,7 @@ Path: /core/v1/orders/{oid}
 - Microsoft.AspNetCore.JsonPatch
 - IdentityServer4.AccessTokenValidation
 - CloudNative.CloudEvents
+- Microsoft.Azure.Functions.Extensions
+
+## E2E correlation
+![Application Insights end-to-end transaction](./media/e2e-correlation.png)

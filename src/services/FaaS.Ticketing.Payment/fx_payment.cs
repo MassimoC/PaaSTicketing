@@ -15,6 +15,7 @@ using System.Diagnostics;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Channel;
 using PaaS.Ticketing.Security;
+using WenceyWang.FIGlet;
 
 namespace FaaS.Ticketing.Payment
 {
@@ -64,6 +65,8 @@ namespace FaaS.Ticketing.Payment
 
                 // TODO: This should be done with a DURABLE function
                 // or implement compensation
+                var text = new AsciiArt("payment");
+                log.LogInformation(text.ToString());
 
                 // 1. perform the payment
                 var paymentCtx = JsonConvert.DeserializeObject<PaymentContext>((string)inboundEvent.Data);

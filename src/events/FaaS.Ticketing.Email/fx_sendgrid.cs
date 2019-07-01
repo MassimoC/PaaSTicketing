@@ -14,40 +14,48 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Azure.WebJobs.Extensions.EventGrid;
 using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using System;
+using WenceyWang.FIGlet;
 
 namespace FaaS.Ticketing.Email
 {
-    public static class fx_sendgrid
+    public class fx_sendgrid
     {
+        private IConfiguration _configuration;
+
+        public fx_sendgrid(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         [FunctionName("fx_sendgrid")]
         [return: SendGrid(ApiKey = "SendGrid-ApiKey", From = "SendGrid-FromRecipient")]
-        public static SendGridMessage Run([EventGridTrigger]EventGridEvent eventGridEvent, ILogger log, ExecutionContext context)
+        public SendGridMessage Run([EventGridTrigger]EventGridEvent eventGridEvent, ILogger log)
         {
+            var text = new AsciiArt("to sendgrid");
+            log.LogInformation(text.ToString());
+
             log.LogInformation($"C# Queue trigger function processed order: {eventGridEvent.Data}");
 
-            var config = new ConfigurationBuilder()
-            .SetBasePath(context.FunctionAppDirectory)
-            .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
-            .AddEnvironmentVariables()
-            .Build();
-
-            var emailFrom = config["Values:SendGrid-FromRecipient"];
+            var emailFrom = Environment.GetEnvironmentVariable("SendGrid-FromRecipient");
+            var jsonData = JsonConvert.SerializeObject(eventGridEvent.Data);
+            var orderData = JsonConvert.DeserializeObject<Order>(jsonData);
             SendGridMessage message = new SendGridMessage()
             {
-                Subject = $"Thanks for your order (#{eventGridEvent.Data})!"
+                Subject = $"Thanks for your order # {orderData.OrderId})"
             };
-
+            message.AddContent("text/plain", $"{orderData.Recipient}, your order ({orderData.OrderId}) is being processed!");
             message.SetFrom(emailFrom);
             message.AddTo("massimo.crippa@gmail.com");
-            message.AddContent("text/plain","your order has been processed");
-            //message.AddContent("text/plain", $"{order.CustomerName}, your order ({order.OrderId}) is being processed!");
+            
             return message;
         }
     }
     public class Order
     {
         public string OrderId { get; set; }
-        public string CustomerName { get; set; }
-        public string CustomerEmail { get; set; }
+        public string Recipient { get; set; }
+        public string Source { get; set; }
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
+using WenceyWang.FIGlet;
 
 namespace FaaS.Ticketing.Shipping
 {
@@ -21,6 +22,9 @@ namespace FaaS.Ticketing.Shipping
 
             var topicEndpoint = Environment.GetEnvironmentVariable("TopicEndpoint");
             var topicKey = Environment.GetEnvironmentVariable("TopicKey");
+
+            var text = new AsciiArt("to event grid");
+            log.LogInformation(text.ToString());
 
             string topicHostname = new Uri(topicEndpoint).Host;
             using (EventGridClient client = new EventGridClient(new TopicCredentials(topicKey)))

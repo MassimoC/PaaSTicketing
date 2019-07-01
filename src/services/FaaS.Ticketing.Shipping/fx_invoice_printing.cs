@@ -9,6 +9,7 @@ using System.Text;
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Azure.KeyVault;
 using PaaS.Ticketing.Security;
+using WenceyWang.FIGlet;
 
 namespace FaaS.Ticketing.Shipping
 {
@@ -24,7 +25,7 @@ namespace FaaS.Ticketing.Shipping
 
             var storageConnectionString = String.Empty;
             // local debug uses visualstudio user as MSI
-            var securityVault = new VaultService(Environment.GetEnvironmentVariable("VaultName"););
+            var securityVault = new VaultService(Environment.GetEnvironmentVariable("VaultName"));
             try
             {
                 storageConnectionString = securityVault.GetSecret("cn-storageaccount").Result;
@@ -33,6 +34,9 @@ namespace FaaS.Ticketing.Shipping
             {
                 storageConnectionString = Environment.GetEnvironmentVariable("StorageConnectionString");
             }
+
+            var text = new AsciiArt("to blob storage");
+            log.LogInformation(text.ToString());
 
             // save document to blob storage
             cloudStorageAccount = CloudStorageAccount.Parse(storageConnectionString);

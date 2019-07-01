@@ -165,7 +165,7 @@ namespace PaaS.Ticketing.Api.Controllers
                 // drop message in the queue
                 _logger.LogInformation($"Drop message in the queue");
 
-                //TODO KeyVault
+                //TODO KeyVault : local MSI and dicker
                 var sbConnectionString = String.Empty;
                 try
                 {
@@ -173,7 +173,6 @@ namespace PaaS.Ticketing.Api.Controllers
                 }
                 catch (Exception ex)
                 {
-                    // TODO
                     // MSI + docker not working in debug mode?
                     var s = ex.Message;
                     //throw;

@@ -54,7 +54,12 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Security", "Security", "{1955FFAA-7A0C-4CAA-BC9D-7A2C254906F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaaS.Ticketing.Security", "security\PaaS.Ticketing.Security\PaaS.Ticketing.Security.csproj", "{E0211093-ABE3-43BE-B7E8-910B8ECF2902}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaaS.Ticketing.Security", "security\PaaS.Ticketing.Security\PaaS.Ticketing.Security.csproj", "{E0211093-ABE3-43BE-B7E8-910B8ECF2902}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F6AB8C9E-5B3A-4656-A1D4-B7B1874FE0D6}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

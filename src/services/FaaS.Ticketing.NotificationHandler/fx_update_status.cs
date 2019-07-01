@@ -12,6 +12,7 @@ using System.Net.Mime;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
+using WenceyWang.FIGlet;
 
 namespace FaaS.Ticketing.NotificationHandler
 {
@@ -42,18 +43,19 @@ namespace FaaS.Ticketing.NotificationHandler
             var jsonFormatter = new JsonEventFormatter();
             var inboundEvent = jsonFormatter.DecodeStructuredEvent(Encoding.UTF8.GetBytes(notificationMsg));
             log.LogInformation($" message type : { inboundEvent.Type}");
-
             var notification = JsonConvert.DeserializeObject<ObjectStatus>((string)inboundEvent.Data);
             dynamic jPatch = new JObject();
             jPatch.op= "replace";
             jPatch.path = "/status";
             jPatch.value = notification.Status;
             var patchArray = new JArray(jPatch);
+
             log.LogInformation($" Status to be changed for the object {notification.Id}  value: { notification.Status}");
+            var text = new AsciiArt(notification.Status);
+            log.LogInformation(text.ToString());
 
             var httpContent = new StringContent(patchArray.ToString(), Encoding.UTF8, "application/json-patch+json");
-            // TODO parametrization missing
-            var url = string.Format("https://localhost:44328/core/v1/orders/{0}", notification.Id);
+            var url = string.Format(config["Values:ApiUpdateOrderUrl"], notification.Id);
             //TODO add authentication
             //_httpClient.DefaultRequestHeaders.Authorization =new AuthenticationHeaderValue("Bearer", "to be added");
 

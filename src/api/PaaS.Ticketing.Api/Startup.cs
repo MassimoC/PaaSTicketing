@@ -27,7 +27,7 @@ namespace PaaS.Ticketing.Api
             _logger = logger;
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        // Add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             // Add functionality to inject IOptions<T>

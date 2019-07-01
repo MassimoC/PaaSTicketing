@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PaaS.Ticketing.Events.Data;
+using WenceyWang.FIGlet;
 
 namespace FaaS.Ticketing.Shipping
 {
@@ -29,6 +30,9 @@ namespace FaaS.Ticketing.Shipping
             var requestActivity = new Activity("command://order.update");
             requestActivity.SetParentId(parentId);
             var requestOperation = _telemetryClient.StartOperation<RequestTelemetry>(requestActivity);
+
+            var text = new AsciiArt("complete order");
+            log.LogInformation(text.ToString());
 
             try
             {
