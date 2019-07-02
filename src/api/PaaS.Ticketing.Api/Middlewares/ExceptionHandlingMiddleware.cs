@@ -75,7 +75,7 @@ namespace PaaS.Ticketing.Api.Middlewares
                 Instance = $"urn:codit.eu:server-error:{Guid.NewGuid()}"
             };
 
-            //TODO headers
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             context.Response.WriteJson(problemDetails, contentType: ContentTypeNames.Application.JsonProblem);
         }
     }
