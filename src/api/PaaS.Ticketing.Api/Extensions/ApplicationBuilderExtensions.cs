@@ -61,6 +61,7 @@ namespace PaaS.Ticketing.Api.Extensions
                         Instance = $"urn:codit.eu:server-error:{Guid.NewGuid()}"
                     };
 
+                    // TODO: headers are not propagated
                     // TODO: Plug in telemetry
                     context.Response.WriteJson(problemDetails, contentType: ContentTypeNames.Application.JsonProblem);
                 });

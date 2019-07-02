@@ -79,7 +79,9 @@ namespace PaaS.Ticketing.Api
             app.UseMiddleware<ScopedLoggingMiddleware>();
             app.UseAuthentication();
             app.UseHttpsRedirection();
-            app.UseExceptionHandlerWithProblemJson();
+            // prefer the middleware approach
+            //app.UseExceptionHandlerWithProblemJson();
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseStatusCodePagesWithReExecute("/errors/{0}");
             app.UseMvc();
             app.UseOpenApi();

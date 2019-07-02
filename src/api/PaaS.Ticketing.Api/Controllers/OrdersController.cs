@@ -111,6 +111,7 @@ namespace PaaS.Ticketing.Api.Controllers
         public async Task<IActionResult> GetOrders([FromQuery(Name = "status")]string status = "")
         {
             _logger.LogInformation("API - Order controller - GetOrders");
+            if (status.ToUpper() == "ERRORS" || status.ToUpper() == "ERROR") throw new ArgumentException("This should be a 400, 500 just for debug purposes.");
             var orders = await _ordersRepository.GetOrdersAsync(status);
             var results = Mapper.Map<IEnumerable<OrderDto>>(orders);
             _logger.LogInformation($"Returning values");
@@ -169,13 +170,13 @@ namespace PaaS.Ticketing.Api.Controllers
                 var sbConnectionString = String.Empty;
                 try
                 {
-                    sbConnectionString = _vaultService.GetSecret("cn-storageaccount").Result;
+                    sbConnectionString = _vaultService.GetSecret("cn-servicebus").Result;
                 }
                 catch (Exception ex)
                 {
+                    // TODO local debug with docker 
                     // MSI + docker not working in debug mode?
-                    var s = ex.Message;
-                    //throw;
+                    _logger.LogError(ex.Message);
                 }
                 if (String.IsNullOrEmpty(sbConnectionString)) sbConnectionString = _configuration.GetConnectionString(name: "ServiceBus");
 
