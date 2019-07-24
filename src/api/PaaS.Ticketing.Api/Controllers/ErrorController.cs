@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PaaS.Ticketing.Api.Extensions;
+using PaaS.Ticketing.ApiLib.Extensions;
 
 namespace PaaS.Ticketing.Api.Controllers
 {

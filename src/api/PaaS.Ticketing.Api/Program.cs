@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using PaaS.Ticketing.Api.Context;
+using PaaS.Ticketing.ApiLib.Context;
 using System;
 
 namespace PaaS.Ticketing.Api

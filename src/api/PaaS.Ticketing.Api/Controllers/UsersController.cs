@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using PaaS.Ticketing.Api.DTOs;
-using PaaS.Ticketing.Api.Entities;
-using PaaS.Ticketing.Api.Repositories;
+using PaaS.Ticketing.ApiLib.DTOs;
+using PaaS.Ticketing.ApiLib.Entities;
+using PaaS.Ticketing.ApiLib.Repositories;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;

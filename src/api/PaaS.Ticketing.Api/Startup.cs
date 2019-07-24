@@ -1,18 +1,14 @@
-﻿using IdentityServer4.AccessTokenValidation;
-using Microsoft.ApplicationInsights.AspNetCore.Extensions;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using PaaS.Ticketing.Api.Context;
-using PaaS.Ticketing.Api.Extensions;
-using PaaS.Ticketing.Api.Factories;
-using PaaS.Ticketing.Api.Middlewares;
+using PaaS.Ticketing.ApiLib;
+using PaaS.Ticketing.ApiLib.Context;
+using PaaS.Ticketing.ApiLib.Extensions;
+using PaaS.Ticketing.ApiLib.Factories;
+using PaaS.Ticketing.ApiLib.Middlewares;
 using PaaS.Ticketing.Security;
-using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace PaaS.Ticketing.Api
 {
@@ -54,7 +50,7 @@ namespace PaaS.Ticketing.Api
             services.ConfigureRouting();
             services.ConfigureInvalidStateHandling();
             services.AddSingleton<ITelemetryClientFactory, TelemetryClientFactory>();
-            services.AddSingleton<IVaultService>(new VaultService("ticketingsecure"));
+            services.AddSingleton<IVaultService>(new VaultService(Constants.API.VaultName));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

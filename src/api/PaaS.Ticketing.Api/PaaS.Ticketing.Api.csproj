@@ -37,6 +37,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\events\PaaS.Ticketing.Events\PaaS.Ticketing.Events.csproj" />
     <ProjectReference Include="..\..\security\PaaS.Ticketing.Security\PaaS.Ticketing.Security.csproj" />
+    <ProjectReference Include="..\PaaS.Ticketing.ApiLib\PaaS.Ticketing.ApiLib.csproj" />
   </ItemGroup>
 
   <ItemGroup>

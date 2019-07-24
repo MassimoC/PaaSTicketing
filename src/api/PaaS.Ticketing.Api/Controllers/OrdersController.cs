@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PaaS.Ticketing.Api.DTOs;
-using PaaS.Ticketing.Api.Entities;
-using PaaS.Ticketing.Api.Repositories;
+using System.Text;
+using Microsoft.Extensions.Configuration;
+using System.Diagnostics;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
+
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Net;
@@ -11,23 +14,25 @@ using PaaS.Ticketing.Events;
 using CloudNative.CloudEvents;
 using System.Net.Mime;
 using Microsoft.AspNetCore.JsonPatch;
-using PaaS.Ticketing.Api.Extensions;
 using Microsoft.AspNetCore.Http;
 using AutoMapper;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.Extensions.Logging;
-using PaaS.Ticketing.Api.Filters;
+
+using PaaS.Ticketing.ApiLib.DTOs;
+using PaaS.Ticketing.ApiLib.Entities;
+using PaaS.Ticketing.ApiLib.Repositories;
+using PaaS.Ticketing.ApiLib.Filters;
+using PaaS.Ticketing.ApiLib.Extensions;
+using PaaS.Ticketing.ApiLib.Factories;
 using PaaS.Ticketing.Events.Data;
-using System.Text;
-using Microsoft.Extensions.Configuration;
 using LoggingContext = PaaS.Ticketing.Events.Logging.Constants;
-using PaaS.Ticketing.Api.Factories;
-using System.Diagnostics;
-using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.DataContracts;
 using PaaS.Ticketing.Security;
+
+
+
 
 namespace PaaS.Ticketing.Api.Controllers
 {
@@ -155,7 +160,7 @@ namespace PaaS.Ticketing.Api.Controllers
 
             _logger.LogInformation($"Retrieving new order");
             var orderDb = await _ordersRepository.GetOrderAsync(entityConcertUser.Token);
-            var orderDto = Mapper.Map<DTOs.OrderDto>(orderDb);
+            var orderDto = Mapper.Map<OrderDto>(orderDb);
 
             // dependency tracking
             var current = Activity.Current;
