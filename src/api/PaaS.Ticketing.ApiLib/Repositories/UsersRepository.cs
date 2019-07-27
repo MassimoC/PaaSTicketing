@@ -10,7 +10,7 @@ namespace PaaS.Ticketing.ApiLib.Repositories
 {
     public class UsersRepository : IUsersRepository
     {
-
+        const int size = 5;
         private readonly TicketingContext _context;
 
         public UsersRepository(TicketingContext context)
@@ -23,9 +23,19 @@ namespace PaaS.Ticketing.ApiLib.Repositories
             return await _context.Users.Where(p => p.UserId == userId).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<User>> GetUsersAsync()
+        public async Task<IEnumerable<User>> GetUsersAsync(int? page)
         {
-            return await _context.Users.ToListAsync();
+            if (!page.HasValue)
+            {
+                return await _context.Users.ToListAsync();
+            }
+            else
+            {
+                var query = _context.Users;
+                var entries = await query.Skip(((int)page - 1) * size).Take(size).ToListAsync();
+                //var count = await query.CountAsync();
+                return entries;
+            }
         }
 
         public void AddUser(User user)

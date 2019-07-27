@@ -8,7 +8,7 @@ namespace PaaS.Ticketing.ApiLib.Repositories
 {
     public interface IUsersRepository
     {
-        Task<IEnumerable<User>> GetUsersAsync();
+        Task<IEnumerable<User>> GetUsersAsync(int? page);
         Task<User> GetUserAsync(Guid id);
         void AddUser(User user);
         Task<bool> SaveChangesAsync();

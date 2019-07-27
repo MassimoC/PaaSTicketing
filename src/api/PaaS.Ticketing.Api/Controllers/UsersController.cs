@@ -22,18 +22,20 @@ namespace PaaS.Ticketing.Api.Controllers
             _usersRepository = usersRepository;
         }
 
+
         /// <summary>
         /// Get users
         /// </summary>
+        /// <param name="page"></param>
         /// <remarks>Provides a complete object for all known users</remarks>
         /// <returns>Return a list of Concerts</returns>
         [HttpGet(Name = "Users_GetAllUsers")]
         [SwaggerResponse((int)HttpStatusCode.OK, "List of users", typeof(IEnumerable<UserDto>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available", typeof(ProblemDetails))]
         [Produces("application/json", "application/problem+json")]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAllUsers(int? page = null)
         {
-            var users = await _usersRepository.GetUsersAsync();
+            var users = await _usersRepository.GetUsersAsync(page);
             var result = Mapper.Map<IEnumerable<UserDto>>(users);
             return Ok(result);
         }

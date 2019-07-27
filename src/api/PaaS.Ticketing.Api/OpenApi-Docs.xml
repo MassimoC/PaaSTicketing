@@ -90,10 +90,11 @@
             <remarks>Update the order status</remarks>
             <returns>Accepted</returns>
         </member>
-        <member name="M:PaaS.Ticketing.Api.Controllers.UsersController.GetAllUsers">
+        <member name="M:PaaS.Ticketing.Api.Controllers.UsersController.GetAllUsers(System.Nullable{System.Int32})">
             <summary>
             Get users
             </summary>
+            <param name="page"></param>
             <remarks>Provides a complete object for all known users</remarks>
             <returns>Return a list of Concerts</returns>
         </member>

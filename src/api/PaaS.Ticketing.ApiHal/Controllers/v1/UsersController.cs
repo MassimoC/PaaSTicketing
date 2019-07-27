@@ -35,7 +35,7 @@ namespace PaaS.Ticketing.ApiHal.Controllers.v1
         [Produces("application/hal+json", "application/problem+json")]
         public async Task<IActionResult> GetAllUsers()
         {
-            var users = await _usersRepository.GetUsersAsync();
+            var users = await _usersRepository.GetUsersAsync(null);
             var results = Mapper.Map<IEnumerable<UserDto>>(users);
 
             var response = new HALResponse(null)
