@@ -2,14 +2,39 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "website_name": {
-      "value": "ticketing-api"
+    "infra": {
+      "value": {
+        "environment": {
+          "dtap": "#{infra.environment.dtap}#",
+          "geo": "#{infra.environment.geo}#",
+          "raciResponsible": "#{infra.environment.raciResponsible}#",
+          "raciAccountable": "#{infra.environment.raciAccountable}#",
+          "networkAccess": "#{infra.environment.networkAccess}#",
+          "costCenter": "#{infra.environment.costCenter}#",
+          "description": "#{infra.environment.description}#"
+        },
+        "app": {
+          "webAppName": "#{infra.app.webAppName}#",
+          "appPlanName": "#{infra.app.appPlanName}#",
+          "appInsightsName": "#{infra.app.appInsightsName}#",
+          "keyVaultName": "#{infra.app.keyVaultName}#",
+          "tenantId": "#{infra.app.tenantId}#",
+          "webAppSku": "#{infra.app.webAppSku}#",
+          "webAppSkuCode": "#{infra.app.webAppSkuCode}#",
+          "keyVaultSku": "#{infra.app.keyVaultSku}#",
+          "dockerRegistryDomain": "#{infra.app.dockerRegistryDomain}#",
+          "dockerRegistryUsername": "#{infra.app.dockerRegistryUsername}#",
+          "dockerRegistryPassword": "#{infra.app.dockerRegistryPassword}#"
+        }
+      }
     },
-    "serverfarms_planName": {
-      "value": "plan-api-dedicated"
-    },
-    "appinsights_name": {
-      "value": "ticketing-ai"
+    "releaseInfo": {
+      "value": {
+        "release": {
+          "name": "#{release.releaseName}#",
+          "url": "#{release.releaseWebUrl}#"
+        }
+      }
     }
   }
 }

@@ -2,5 +2,30 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "infra": {
+      "value": {
+        "environment": {
+          "dtap": "#{infra.environment.dtap}#",
+          "geo": "#{infra.environment.geo}#",
+          "raciResponsible": "#{infra.environment.raciResponsible}#",
+          "raciAccountable": "#{infra.environment.raciAccountable}#",
+          "networkAccess": "#{infra.environment.networkAccess}#",
+          "costCenter": "#{infra.environment.costCenter}#",
+          "description": "#{infra.environment.description}#"
+        },
+        "app": {
+          "something": "#{infra.app.something}#",
+          "somethingElse": "#{infra.app.somethingElse}#"
+        }
+      }
+    },
+    "releaseInfo": {
+      "value": {
+        "release": {
+          "name": "#{release.releaseName}#",
+          "url": "#{release.releaseWebUrl}#"
+        }
+      }
+    }
   }
 }

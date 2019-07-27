@@ -2,92 +2,195 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "serverfarms_planName": {
-      "type": "String"
+    "infra": {
+      "type": "object",
+      "metadata": {
+        "description": "object that contains info about the infra."
+      }
     },
-    "website_name": {
-      "type": "String"
-    },
-    "appinsights_name": {
-      "type": "String"
+    "releaseInfo": {
+      "type": "object",
+      "metadata": {
+        "description": "info about the release that deployed this resource."
+      }
     },
     "location": {
+      "type": "string",
       "defaultValue": "[resourceGroup().location]",
-      "type": "String"
+      "metadata": {
+        "description": "Location for all resources."
+      }
     }
   },
   "variables": {
-    
+    "webAppName": "[concat('racoon-', parameters('infra').environment.dtap, '-', parameters('infra').environment.geo, '-', parameters('infra').app.webAppName)]",
+    "appInsightsName": "[concat('racoon-', parameters('infra').environment.dtap, '-', parameters('infra').environment.geo, '-', parameters('infra').app.appInsightsName)]",
+    "appPlanName": "[concat('racoon-', parameters('infra').environment.dtap, '-', parameters('infra').environment.geo, '-', parameters('infra').app.appPlanName)]",
+    "keyVaultName": "[concat('racoon-', parameters('infra').environment.dtap, '-', parameters('infra').environment.geo, '-', parameters('infra').app.keyVaultName)]",
+    "dockerRegistryUrl": "[concat('https://', parameters('infra').app.dockerRegistryDomain)]",
+    "networkAcls": {
+      "value": {
+        "defaultAction": "Allow",
+        "bypass": "AzureServices",
+        "virtualNetworkRules": [
+
+        ],
+        "ipRules": [
+
+        ]
+      }
+    }
   },
   "resources": [
     {
-      "type": "Microsoft.Web/serverfarms",
       "apiVersion": "2016-09-01",
-      "name": "[parameters('serverfarms_planName')]",
+      "name": "[variables('appPlanName')]",
+      "type": "Microsoft.Web/serverfarms",
       "location": "[parameters('location')]",
-      "sku": {
-        "name": "S1",
-        "tier": "Standard",
-        "size": "S1",
-        "family": "S",
-        "capacity": 1
-      },
-      "kind": "app",
       "properties": {
-        "name": "[parameters('serverfarms_planName')]",
-        "perSiteScaling": false,
-        "reserved": false,
-        "targetWorkerCount": 0,
-        "targetWorkerSizeId": 0
-      }
+        "name": "[variables('appPlanName')]",
+        "reserved": true,
+        "numberOfWorkers": "1"
+      },
+      "tags": {
+        "raciResponsible": "[parameters('infra').environment.raciResponsible]",
+        "raciAccountable": "[parameters('infra').environment.raciAccountable]",
+        "networkAccess": "[parameters('infra').environment.networkAccess]",
+        "costCenter": "[parameters('infra').environment.costCenter]",
+        "displayName": "[variables('appPlanName')]",
+        "dtap": "[parameters('infra').environment.dtap]",
+        "geo": "[parameters('infra').environment.geo]",
+        "description": "[parameters('infra').environment.description]",
+        "releaseName": "[parameters('releaseInfo').release.name]",
+        "releaseLink": "[parameters('releaseInfo').release.url]"
+      },
+      "sku": {
+        "Tier": "[parameters('infra').app.webAppSku]",
+        "Name": "[parameters('infra').app.webAppSkuCode]"
+      },
+      "kind": "linux"
     },
     {
+      "apiVersion": "2016-03-01",
+      "name": "[variables('webAppName')]",
       "type": "Microsoft.Web/sites",
-      "apiVersion": "2016-08-01",
-      "name": "[parameters('website_name')]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "name": "[variables('webAppName')]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
+              "value": "false"
+            },
+            {
+              "name": "DOCKER_REGISTRY_SERVER_URL",
+              "value": "[variables('dockerRegistryUrl')]"
+            },
+            {
+              "name": "DOCKER_REGISTRY_SERVER_USERNAME",
+              "value": "[parameters('infra').app.dockerRegistryUsername]"
+            },
+            {
+              "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
+              "value": "[parameters('infra').app.dockerRegistryPassword]"
+            }
+          ],
+          "linuxFxVersion": "DOCKER|ossurprdregistryweu.azurecr.io",
+          "alwaysOn": true
+        },
+        "clientAffinityEnabled": false,
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appPlanName'))]"
+      },
+      "tags": {
+        "raciResponsible": "[parameters('infra').environment.raciResponsible]",
+        "raciAccountable": "[parameters('infra').environment.raciAccountable]",
+        "networkAccess": "[parameters('infra').environment.networkAccess]",
+        "costCenter": "[parameters('infra').environment.costCenter]",
+        "displayName": "[variables('webAppName')]",
+        "dtap": "[parameters('infra').environment.dtap]",
+        "geo": "[parameters('infra').environment.geo]",
+        "description": "[parameters('infra').environment.description]",
+        "releaseName": "[parameters('releaseInfo').release.name]",
+        "releaseLink": "[parameters('releaseInfo').release.url]"
+      },
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_planName'))]"
-      ],
-      "kind": "app",
-      "properties": {
-        "enabled": true,
-        "hostNameSslStates": [
-          {
-            "name": "[concat(parameters('website_name'), '.azurewebsites.net')]",
-            "sslState": "Disabled",
-            "hostType": "Standard"
-          },
-          {
-            "name": "[concat(parameters('website_name'), '.scm.azurewebsites.net')]",
-            "sslState": "Disabled",
-            "hostType": "Repository"
-          }
-        ],
-        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_planName'))]",
-        "reserved": false,
-        "scmSiteAlsoStopped": false,
-        "clientAffinityEnabled": true,
-        "clientCertEnabled": false,
-        "hostNamesDisabled": false,
-        "containerSize": 0,
-        "dailyMemoryTimeQuota": 0,
-        "httpsOnly": true
-      },
-      "apiVersion": "2016-03-01",
-      "location": "[parameters('location')]"
+        "[resourceId('Microsoft.Web/serverfarms', variables('appPlanName'))]"
+      ]
     },
     {
-      "name": "[parameters('appinsights_name')]",
+      "name": "[variables('appInsightsName')]",
       "type": "microsoft.insights/components",
       "location": "[parameters('location')]",
       "apiVersion": "2014-08-01",
       "properties": {
-          "ApplicationId": "[parameters('appinsights_name')]",
-          "Application_Type": "web",
-          "Flow_Type": "Redfield",
-          "Request_Source": "IbizaAIExtension"
+        "ApplicationId": "[variables('appInsightsName')]",
+        "Application_Type": "web",
+        "Flow_Type": "Redfield",
+        "Request_Source": "IbizaAIExtension"
+      },
+      "tags": {
+        "raciResponsible": "[parameters('infra').environment.raciResponsible]",
+        "raciAccountable": "[parameters('infra').environment.raciAccountable]",
+        "networkAccess": "[parameters('infra').environment.networkAccess]",
+        "costCenter": "[parameters('infra').environment.costCenter]",
+        "displayName": "[variables('appInsightsName')]",
+        "dtap": "[parameters('infra').environment.dtap]",
+        "geo": "[parameters('infra').environment.geo]",
+        "description": "[parameters('infra').environment.description]",
+        "releaseName": "[parameters('releaseInfo').release.name]",
+        "releaseLink": "[parameters('releaseInfo').release.url]"
       }
-  }    
-  ]
+    },
+    {
+      "apiVersion": "2016-10-01",
+      "name": "[variables('keyVaultName')]",
+      "location": "[parameters('location')]",
+      "type": "Microsoft.KeyVault/vaults",
+      "properties": {
+        "tenantId": "[parameters('infra').app.tenantId]",
+        "accessPolicies": [
+
+        ],
+        "sku": {
+          "name": "[parameters('infra').app.keyVaultSku]",
+          "family": "A"
+        },
+        "networkAcls": "[variables('networkAcls')]"
+      },
+      "tags": {
+        "raciResponsible": "[parameters('infra').environment.raciResponsible]",
+        "raciAccountable": "[parameters('infra').environment.raciAccountable]",
+        "networkAccess": "[parameters('infra').environment.networkAccess]",
+        "costCenter": "[parameters('infra').environment.costCenter]",
+        "displayName": "[variables('keyVaultName')]",
+        "dtap": "[parameters('infra').environment.dtap]",
+        "geo": "[parameters('infra').environment.geo]",
+        "description": "[parameters('infra').environment.description]",
+        "releaseName": "[parameters('releaseInfo').release.name]",
+        "releaseLink": "[parameters('releaseInfo').release.url]"
+      }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "name": "[concat(variables('keyVaultName'), '/', 'appInsightsInstrumentationKey')]",
+      "apiVersion": "2018-02-14",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "value": "[reference(resourceId('Microsoft.Insights/components', variables('appInsightsName'))).InstrumentationKey]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Insights/components', variables('appInsightsName'))]"
+      ]
+    }
+  ],
+  "outputs": {
+    "objectId": {
+      "type": "string",
+      "value": "[reference(concat('Microsoft.Web/sites/', variables('webAppName')), '2018-02-01', 'Full').identity.principalId]"
+    }
+  }
 }

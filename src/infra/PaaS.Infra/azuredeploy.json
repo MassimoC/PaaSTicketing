@@ -3,6 +3,23 @@
   "contentVersion": "1.0.0.0",
   "parameters": {},
   "variables": {},
-  "resources": [],
+  "resources": [
+    {
+      "apiVersion": "2016-09-01",
+      "name": "xyz",
+      "tags": {
+        "raciResponsible": "[parameters('infra').environment.raciResponsible]",
+        "raciAccountable": "[parameters('infra').environment.raciAccountable]",
+        "networkAccess": "[parameters('infra').environment.networkAccess]",
+        "costCenter": "[parameters('infra').environment.costCenter]",
+        "displayName": "[variables('appPlanName')]",
+        "dtap": "[parameters('infra').environment.dtap]",
+        "geo": "[parameters('infra').environment.geo]",
+        "description": "[parameters('infra').environment.description]",
+        "releaseName": "[parameters('releaseInfo').release.name]",
+        "releaseLink": "[parameters('releaseInfo').release.url]"
+      }
+    }
+  ],
   "outputs": {}
 }

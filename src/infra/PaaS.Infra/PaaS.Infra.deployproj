@@ -28,8 +28,6 @@
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>
-    <None Include="infra-ai.json" />
-    <None Include="infra-ai.parameters.json" />
     <None Include="infra-apim.json" />
     <None Include="infra-apim.parameters.json" />
     <None Include="infra-appservice.json" />
