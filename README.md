@@ -1,6 +1,10 @@
 # PaaS Ticketing
 Extremely simple PaaS ticketing system used as playground project.
 Powered by [Arcus](https://arcus-azure.net) and lot of copying and pasting from Stack Overflow.
+The API exposes three endpoints
+- REST
+- HAL
+- GraphQL
 
 ![Scenario](./media/scenario.png)
 
