@@ -65,6 +65,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaaS.Ticketing.ApiHal", "ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaaS.Ticketing.ApiLib", "api\PaaS.Ticketing.ApiLib\PaaS.Ticketing.ApiLib.csproj", "{14CB7126-D88E-4F29-B261-2F7E002776D5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaaS.Ticketing.ApiGraphQL", "api\PaaS.Ticketing.ApiGraphQL\PaaS.Ticketing.ApiGraphQL.csproj", "{BD2002BC-A1D4-45A0-9CF5-902FD1500EA7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -131,6 +133,10 @@ Global
 		{14CB7126-D88E-4F29-B261-2F7E002776D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14CB7126-D88E-4F29-B261-2F7E002776D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14CB7126-D88E-4F29-B261-2F7E002776D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD2002BC-A1D4-45A0-9CF5-902FD1500EA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD2002BC-A1D4-45A0-9CF5-902FD1500EA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD2002BC-A1D4-45A0-9CF5-902FD1500EA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD2002BC-A1D4-45A0-9CF5-902FD1500EA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -150,6 +156,7 @@ Global
 		{E0211093-ABE3-43BE-B7E8-910B8ECF2902} = {1955FFAA-7A0C-4CAA-BC9D-7A2C254906F0}
 		{ACBE732C-4AC0-418B-9F1A-F6BEC8937EEE} = {05CE95DA-BE74-444D-A1A0-429AFFBB46C6}
 		{14CB7126-D88E-4F29-B261-2F7E002776D5} = {05CE95DA-BE74-444D-A1A0-429AFFBB46C6}
+		{BD2002BC-A1D4-45A0-9CF5-902FD1500EA7} = {05CE95DA-BE74-444D-A1A0-429AFFBB46C6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {215692DF-777A-45B9-A3AF-3D8BEACB7B3B}
