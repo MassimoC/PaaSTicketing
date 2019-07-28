@@ -24,6 +24,7 @@ using PaaS.Ticketing.ApiLib.Filters;
 using System;
 using PaaS.Ticketing.ApiLib.OpenApi;
 using Microsoft.ApplicationInsights.Extensibility;
+using PaaS.Ticketing.ApiLib.Factories;
 
 namespace PaaS.Ticketing.ApiLib.Extensions
 {
@@ -41,12 +42,6 @@ namespace PaaS.Ticketing.ApiLib.Extensions
                 return;
             }
             var connectionString = configuration.GetConnectionString(name: "TicketingDB");
-            //default scope lifetime
-            //#if DEBUG
-            //            services.AddDbContext<ConcertsContext>(opt => opt.UseInMemoryDatabase(databaseName: "TicketingDB"));
-            //#else
-            //            services.AddDbContext<ConcertsContext>(o => o.UseSqlServer(connectionString)); 
-            //#endif
             services.AddDbContext<TicketingContext>(o => o.UseSqlServer(connectionString,
                     sqlServerOptionsAction: sqlOptions =>
                     {
@@ -82,7 +77,6 @@ namespace PaaS.Ticketing.ApiLib.Extensions
                     options.Authority = idpAuthority;
                     options.ApiName = idpApiName;
                 });
-
         }
 
         /// <summary>
@@ -206,6 +200,8 @@ namespace PaaS.Ticketing.ApiLib.Extensions
             services.AddApplicationInsightsTelemetry(aiOptions);
             services.ConfigureTelemetryModule<Microsoft.ApplicationInsights.AspNetCore.RequestTrackingTelemetryModule>
                 ((req, o) => req.CollectionOptions.TrackExceptions = false);
+
+            services.AddSingleton<ITelemetryClientFactory, TelemetryClientFactory>();
         }
 
         private static string GetXmlDocumentationPath(IServiceCollection services)

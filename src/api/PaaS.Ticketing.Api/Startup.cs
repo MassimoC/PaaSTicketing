@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using PaaS.Ticketing.ApiLib;
 using PaaS.Ticketing.ApiLib.Context;
 using PaaS.Ticketing.ApiLib.Extensions;
-using PaaS.Ticketing.ApiLib.Factories;
 using PaaS.Ticketing.ApiLib.Middlewares;
 using PaaS.Ticketing.Security;
 
@@ -15,11 +14,11 @@ namespace PaaS.Ticketing.Api
     public class Startup
     {
         private readonly ILogger _logger;
-        public IConfiguration Configuration { get; }
+        public IConfiguration _configuration { get; }
 
         public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
-            Configuration = configuration;
+            _configuration = configuration;
             _logger = logger;
         }
 
@@ -28,19 +27,23 @@ namespace PaaS.Ticketing.Api
         {
             // Add functionality to inject IOptions<T>
             services.AddOptions();
+ 
+            // Secrets
+             services.AddSingleton<IVaultService>(new VaultService(_configuration["Security:VaultName"]));
+            
             // Application Insights config
             services.ConfigureAI();
-            _logger.LogInformation("Startup - Configuring services...");
+            _logger.LogInformation("Startup - Configuring CORE services...");
 
             // for migrations
             //var cn = Configuration.GetConnectionString(name: "TicketingDB");
             //services.AddDbContext<TicketingContext>(o => o.UseSqlServer(cn));
 
             // Configure DB
-            services.ConfigureDatabase(Configuration);
+            services.ConfigureDatabase(_configuration);
 
             // Configure Identity Provider
-            services.ConfigureIdp(Configuration);
+            services.ConfigureIdp(_configuration);
 
             // Configure API
             services.ConfigureMvc();
@@ -49,14 +52,12 @@ namespace PaaS.Ticketing.Api
             services.ConfigureOpenApiGeneration();
             services.ConfigureRouting();
             services.ConfigureInvalidStateHandling();
-            services.AddSingleton<ITelemetryClientFactory, TelemetryClientFactory>();
-            services.AddSingleton<IVaultService>(new VaultService(Constants.API.VaultName));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, TicketingContext concertContext)
         {
-            _logger.LogInformation("Startup - Configuring app...");
+            _logger.LogInformation("Startup - Configuring CORE app...");
 
             if (env.IsDevelopment())
             {

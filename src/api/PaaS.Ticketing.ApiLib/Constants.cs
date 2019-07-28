@@ -27,7 +27,6 @@ namespace PaaS.Ticketing.ApiLib
         {
             public const string CloudRoleName = "Ticketing Core API";
             public const string CloudRoleInstance = "Ticketing Core API Instance";
-            public const string VaultName = "ticketingsecure";
         }
     }
 }

@@ -24,7 +24,6 @@ using Microsoft.Extensions.Logging;
 using PaaS.Ticketing.ApiLib.DTOs;
 using PaaS.Ticketing.ApiLib.Entities;
 using PaaS.Ticketing.ApiLib.Repositories;
-using PaaS.Ticketing.ApiLib.Filters;
 using PaaS.Ticketing.ApiLib.Extensions;
 using PaaS.Ticketing.ApiLib.Factories;
 using PaaS.Ticketing.Events.Data;
