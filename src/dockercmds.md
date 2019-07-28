@@ -43,3 +43,26 @@ docker run -d -p 19096:80 --name myticketing_1
 	-e WEBSITE_ROLE_INSTANCE_ID=0 -
 	e WEBSITE_HOSTNAME=myticketing.azurewebsites.net 
 	-e WEBSITE_INSTANCE_ID=1376bf83c4d3971b801d48eadd52635c5490d97856a2aa1c9584202d2f25aabf thecompany.azurecr.io/ticketingapi:0.4  
+
+
+docker build . -f DockerfileHal -t racoon.halapi:0.0.1
+
+!!! enable the "App Service Log" to gather STDOUT and STDERR
+
+## Compose
+services:
+  paas.ticketing.api:
+    image: racoon.coreapi:0.0.beta3
+    container_name: coreapi
+    ports:
+       - "80:80"
+  paas.ticketing.apihal:
+    image: racoon.halapi:0.0.1
+    container_name: halapi
+    ports:
+       - "8081:80"
+  paas.ticketing.apigraphql:
+    image: racoon.graphapi:0.0.1
+    container_name: graphapi
+    ports:
+       - "8082:80"

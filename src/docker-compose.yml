@@ -11,5 +11,16 @@ services:
     image: ${DOCKER_REGISTRY-}paasticketingapi
     build:
       context: .
-      dockerfile: api/PaaS.Ticketing.Api/Dockerfile
+      dockerfile: Dockerfile
 
+  paas.ticketing.apihal:
+    image: ${DOCKER_REGISTRY-}paasticketingapihal
+    build:
+      context: .
+      dockerfile: DockerfileHal
+
+  paas.ticketing.apigraphql:
+    image: ${DOCKER_REGISTRY-}paasticketingapigraphql
+    build:
+      context: .
+      dockerfile: DockerfileGraphQL
