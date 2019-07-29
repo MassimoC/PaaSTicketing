@@ -58,7 +58,7 @@ namespace PaaS.Ticketing.ApiLib.Extensions
                         Title = "An unexpected error occurred!",
                         Status = StatusCodes.Status500InternalServerError,
                         Detail = errorDetail,
-                        Instance = $"urn:mycompany.com:server-error:{Guid.NewGuid()}"
+                        Instance = $"urn:mycompany.com:server-error:{Activity.Current.Id}"
                     };
 
                     // TODO: headers are not propagated

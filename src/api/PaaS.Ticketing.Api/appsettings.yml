@@ -1,0 +1,6 @@
+﻿Logging:
+  ApplicationInsights:
+      LogLevel:
+        Default: Warning
+        System: Warning
+        Microsoft: Warning

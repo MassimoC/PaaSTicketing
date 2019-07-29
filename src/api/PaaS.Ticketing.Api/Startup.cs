@@ -79,7 +79,7 @@ namespace PaaS.Ticketing.Api
             // prefer the middleware approach
             //app.UseExceptionHandlerWithProblemJson();
             app.UseMiddleware<ExceptionHandlingMiddleware>();
-            app.UseStatusCodePagesWithReExecute("/errors/{0}");
+            //app.UseStatusCodePagesWithReExecute("/errors/{0}");
             app.UseMvc();
             app.UseOpenApi();
 

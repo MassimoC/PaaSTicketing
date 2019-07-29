@@ -38,9 +38,12 @@ namespace PaaS.Ticketing.Api
                 {
                     var env = builderContext.HostingEnvironment;
 
+                    
                     config.SetBasePath(env.ContentRootPath);
-                    config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
                     config.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+                    // use GetEnvironmentVariable only in Program.cs, IConfiguration for all the rest
+                    config.AddYamlFile(System.Environment.GetEnvironmentVariable("ConfigurationBag__YamlSettings"), optional: true, reloadOnChange: true);
                     config.AddEnvironmentVariables();
                 })
                 .ConfigureLogging((context, builder) =>

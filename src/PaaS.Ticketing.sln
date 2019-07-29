@@ -48,6 +48,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{7A4357
 	ProjectSection(SolutionItems) = preProject
 		dockercmds.md = dockercmds.md
 		Dockerfile = Dockerfile
+		DockerfileGraphQL = DockerfileGraphQL
+		DockerfileHal = DockerfileHal
 	EndProjectSection
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{E8444823-18BE-431E-B910-FEA61D6BCC57}"
@@ -65,7 +67,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaaS.Ticketing.ApiHal", "ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaaS.Ticketing.ApiLib", "api\PaaS.Ticketing.ApiLib\PaaS.Ticketing.ApiLib.csproj", "{14CB7126-D88E-4F29-B261-2F7E002776D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaaS.Ticketing.ApiGraphQL", "api\PaaS.Ticketing.ApiGraphQL\PaaS.Ticketing.ApiGraphQL.csproj", "{BD2002BC-A1D4-45A0-9CF5-902FD1500EA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaaS.Ticketing.ApiGraphQL", "api\PaaS.Ticketing.ApiGraphQL\PaaS.Ticketing.ApiGraphQL.csproj", "{BD2002BC-A1D4-45A0-9CF5-902FD1500EA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

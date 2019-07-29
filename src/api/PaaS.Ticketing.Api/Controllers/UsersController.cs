@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using PaaS.Ticketing.ApiLib.DTOs;
 using PaaS.Ticketing.ApiLib.Entities;
 using PaaS.Ticketing.ApiLib.Repositories;
@@ -16,10 +17,12 @@ namespace PaaS.Ticketing.Api.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUsersRepository _usersRepository;
+        private readonly ILogger _logger;
 
-        public UsersController(IUsersRepository usersRepository)
+        public UsersController(IUsersRepository usersRepository, ILogger<UsersController> logger)
         {
             _usersRepository = usersRepository;
+            _logger = logger;
         }
 
 
@@ -35,7 +38,9 @@ namespace PaaS.Ticketing.Api.Controllers
         [Produces("application/json", "application/problem+json")]
         public async Task<IActionResult> GetAllUsers(int? page = null)
         {
+            _logger.LogInformation($"GetAllUser - page[{page}]");
             var users = await _usersRepository.GetUsersAsync(page);
+            _logger.LogDebug("GetAllUser - map to DTOs");
             var result = Mapper.Map<IEnumerable<UserDto>>(users);
             return Ok(result);
         }

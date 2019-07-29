@@ -72,7 +72,7 @@ namespace PaaS.Ticketing.ApiLib.Middlewares
                 Title = "An unexpected error occurred!",
                 Status = StatusCodes.Status500InternalServerError,
                 Detail = errorDetail,
-                Instance = $"urn:codit.eu:server-error:{Guid.NewGuid()}"
+                Instance = $"urn:mycompany.com:server-error:{Activity.Current.Id}"
             };
 
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;

@@ -82,7 +82,7 @@ namespace PaaS.Ticketing.ApiGraphQL
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMiddleware<ExceptionHandlingMiddleware>();
-            app.UseStatusCodePagesWithReExecute("/errors/{0}");
+            //app.UseStatusCodePagesWithReExecute("/errors/{0}");
         }
     }
 }
