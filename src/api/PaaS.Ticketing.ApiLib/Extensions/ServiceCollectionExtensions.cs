@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using IdentityServer4.AccessTokenValidation;
+using Microsoft.ApplicationInsights.AspNetCore.Extensions;
+using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
@@ -7,24 +12,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using PaaS.Ticketing.ApiLib.Context;
+using PaaS.Ticketing.ApiLib.Factories;
+using PaaS.Ticketing.ApiLib.Filters;
+using PaaS.Ticketing.ApiLib.Models;
+using PaaS.Ticketing.ApiLib.OpenApi;
 using PaaS.Ticketing.ApiLib.Repositories;
+using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.Swagger;
+using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using static PaaS.Ticketing.ApiLib.ContentTypeNames;
-using IdentityServer4.AccessTokenValidation;
-using Microsoft.ApplicationInsights.AspNetCore.Extensions;
-using PaaS.Ticketing.ApiLib.Models;
-using Microsoft.AspNetCore.Builder;
-using System.Collections.Generic;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Reflection;
-using Microsoft.AspNetCore.Authorization;
-using PaaS.Ticketing.ApiLib.Filters;
-using System;
-using PaaS.Ticketing.ApiLib.OpenApi;
-using Microsoft.ApplicationInsights.Extensibility;
-using PaaS.Ticketing.ApiLib.Factories;
 
 namespace PaaS.Ticketing.ApiLib.Extensions
 {
@@ -85,7 +84,24 @@ namespace PaaS.Ticketing.ApiLib.Extensions
         /// <param name="services">Collections of services in application</param>
         public static void ConfigureInvalidStateHandling(this IServiceCollection services)
         {
-
+            services?.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = context =>
+                {
+                    var problemDetails = new ValidationProblemDetails(context.ModelState)
+                    {
+                        Type = context.HttpContext.Request.Path,
+                        Title = "Validation error",
+                        Status = StatusCodes.Status400BadRequest,
+                        Detail = Constants.Messages.ProblemDetailsDetail,
+                        Instance = $"urn:{Constants.API.CompanyName}:{Constants.API.ClientError}:{Activity.Current.Id}"
+                    };
+                    return new BadRequestObjectResult(problemDetails)
+                    {
+                        ContentTypes = { ContentTypeNames.Application.JsonProblem, ContentTypeNames.Application.XmlProblem }
+                    };
+                };
+            });
         }
 
         /// <summary>
@@ -130,7 +146,7 @@ namespace PaaS.Ticketing.ApiLib.Extensions
         ///     Configure OpenAPI generation
         /// </summary>
         /// <param name="services">Collections of services in application</param>
-        public static void ConfigureOpenApiGeneration(this IServiceCollection services)
+        public static void ConfigureOpenApiGeneration(this IServiceCollection services, bool enableExamples = false)
         {
             var xmlDocumentationPath = GetXmlDocumentationPath(services);
 
@@ -138,9 +154,9 @@ namespace PaaS.Ticketing.ApiLib.Extensions
             {
                 swaggerGenOptions.EnableAnnotations();
                 swaggerGenOptions.DescribeAllEnumsAsStrings();
-                swaggerGenOptions.SwaggerDoc(name: "v1", info: new Info
+                swaggerGenOptions.SwaggerDoc(name: Constants.OpenApi.ApiVersion, info: new Info
                 {
-                    Version = "v1",
+                    Version = Constants.OpenApi.ApiVersion,
                     Title = Constants.OpenApi.Title,
                     Description = Constants.OpenApi.Description,
                     TermsOfService = Constants.OpenApi.TermsOfService,
@@ -159,6 +175,7 @@ namespace PaaS.Ticketing.ApiLib.Extensions
                         Name = "Authorization",
                         Type = "apiKey"
                     });
+                if (enableExamples) swaggerGenOptions.ExampleFilters();
                 swaggerGenOptions.OperationFilter<SecurityRequirementsOperationFilter>();
                 swaggerGenOptions.DocumentFilter<OpenApiDocumentFilter>();
 
@@ -173,7 +190,7 @@ namespace PaaS.Ticketing.ApiLib.Extensions
                     swaggerGenOptions.IncludeXmlComments(xmlDocumentationPath);
                 }
 
-                swaggerGenOptions.CustomSchemaIds(publicSchemaIds);
+                swaggerGenOptions.CustomSchemaIds(PublicSchemaIds);
             });
 
         }
@@ -195,8 +212,7 @@ namespace PaaS.Ticketing.ApiLib.Extensions
             {
                 EnableDebugLogger = false
             };
-            // TODO : commented out 
-            //services.AddSingleton<ITelemetryInitializer, CloudRoleInitializer>();
+            services.AddSingleton<ITelemetryInitializer, CloudRoleInitializer>();
             services.AddApplicationInsightsTelemetry(aiOptions);
             services.ConfigureTelemetryModule<Microsoft.ApplicationInsights.AspNetCore.RequestTrackingTelemetryModule>
                 ((req, o) => req.CollectionOptions.TrackExceptions = false);
@@ -218,7 +234,7 @@ namespace PaaS.Ticketing.ApiLib.Extensions
             return File.Exists(xmlDocumentationPath) ? xmlDocumentationPath : string.Empty;
         }
 
-        private static string publicSchemaIds(Type currentClass)
+        private static string PublicSchemaIds(Type currentClass)
         {
             string returnedValue = currentClass.Name;
             if (returnedValue.EndsWith("Dto"))

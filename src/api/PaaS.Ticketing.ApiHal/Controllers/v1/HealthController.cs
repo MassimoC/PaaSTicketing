@@ -4,6 +4,9 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace PaaS.Ticketing.ApiHal.Controllers.v1
 {
+    /// <summary>
+    /// Health endpoint for availability tests
+    /// </summary>
     [Route("core/v1/[controller]")]
     [ApiController]
     public class HealthController : ControllerBase

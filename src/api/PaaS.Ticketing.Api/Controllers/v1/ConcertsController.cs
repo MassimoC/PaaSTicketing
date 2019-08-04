@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using PaaS.Ticketing.ApiLib.DTOs;
+using PaaS.Ticketing.ApiLib.Entities;
+using PaaS.Ticketing.ApiLib.Extensions;
 using PaaS.Ticketing.ApiLib.Repositories;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
@@ -8,7 +10,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace PaaS.Ticketing.Api.Controllers
+namespace PaaS.Ticketing.Api.Controllers.v1
 {
     [Route("core/v1/[controller]")]
     [ApiController]
@@ -34,8 +36,8 @@ namespace PaaS.Ticketing.Api.Controllers
         public async Task<IActionResult> GetAllConcerts()
         {
             var concerts = await _concertsRepository.GetConcertsAsync();
-            var results = Mapper.Map<IEnumerable<ConcertDto>>(concerts);
-            return Ok(concerts);
+            var result = Mapper.Map<IEnumerable<ConcertDto>>(concerts);
+            return Ok(result);
         }
 
         /// <summary>
@@ -49,14 +51,29 @@ namespace PaaS.Ticketing.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.NotFound, "Concert not found", typeof(ProblemDetails))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available", typeof(ProblemDetails))]
         [Produces("application/json", "application/problem+json")]
-        public async Task<IActionResult> GetConcert(Guid id)
+        public async Task<IActionResult> GetConcert(Guid id, int? expanded = null)
         {
-            var concert = await _concertsRepository.GetConcertAsync(id);
-            if (concert == null)
+            object concert;
+            object result;
+            if (!expanded.HasValue || expanded == 0)
             {
-                return NotFound();
+                concert = await _concertsRepository.GetConcertAsync(id);
+                if (concert == null)
+                {
+                    return NotFound();
+                }
+                result = Mapper.Map<ConcertDto>(concert);
             }
-            var result = Mapper.Map<ConcertDto>(concert);
+            else
+            {
+                concert = await _concertsRepository.GetConcertExpandedAsync(id);
+                if (concert == null)
+                {
+                    return NotFound();
+                }
+                //Fake mapper
+                result = Transformer.Transform<ConcertDto>(concert);
+            }
             return Ok(result);
         }
 
@@ -81,8 +98,8 @@ namespace PaaS.Ticketing.Api.Controllers
             }
 
             var users = await _concertsRepository.GetUsersOfConcertAsync(concert.ConcertId);
-            var results = Mapper.Map<IEnumerable<UserDto>>(users);
-            return Ok(results);
+            var result = Mapper.Map<IEnumerable<UserDto>>(users);
+            return Ok(result);
         }
     }
 }

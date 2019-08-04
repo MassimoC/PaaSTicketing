@@ -14,8 +14,6 @@ namespace PaaS.Ticketing.Api
         public static void Main(string[] args)
         {
             var host = CreateWebHostBuilder(args).Build();
-
-            // db migrations
             using (var scope = host.Services.CreateScope())
             {
                 try

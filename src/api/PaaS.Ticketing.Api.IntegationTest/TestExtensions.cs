@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Newtonsoft.Json;
+using PaaS.Ticketing.ApiLib.Extensions;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Mime;
@@ -54,6 +55,18 @@ namespace PaaS.Ticketing.Api.IntegationTest
 
             string serializeObject = JsonConvert.SerializeObject(response.Content.ReadAsAsync<dynamic>().Result);
             serializeObject.Should().Be(expectedJson);
+        }
+
+        /// <summary>
+        /// Validate whether a HttpResponseMessage instance is a valid problem+json
+        /// </summary>
+        /// <param name="response">instance of HttpResponseMessage</param>
+        public static void ShouldBeProblemJson(this HttpResponseMessage response)
+        {
+            response.ShouldBeNotNull("application/problem+json");
+            var problemJsonResponse = JsonConvert.DeserializeObject<ProblemDetailsError>(response.Content.ReadAsStringAsync().Result);
+            problemJsonResponse.Title.Should().NotBeNullOrEmpty();
+            problemJsonResponse.Instance.Should().NotBeNullOrEmpty();
         }
     }
 }

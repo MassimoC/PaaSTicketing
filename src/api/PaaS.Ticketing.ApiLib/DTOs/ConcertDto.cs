@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PaaS.Ticketing.ApiLib.DTOs
 {
@@ -13,5 +11,12 @@ namespace PaaS.Ticketing.ApiLib.DTOs
         public string Location { get; set; }
         public DateTime From { get; set; }
         public DateTime To { get; set; }
+        public List<TicketDto> Tickets { get; set; }
+    }
+
+    public class TicketDto
+    {
+        public string Email { get; set; }
+        public string Token { get; set; }
     }
 }

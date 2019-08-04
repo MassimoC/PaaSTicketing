@@ -9,6 +9,7 @@ namespace PaaS.Ticketing.ApiLib.Repositories
     {
         Task<IEnumerable<Concert>> GetConcertsAsync();
         Task<Concert> GetConcertAsync(Guid id);
+        Task<Concert> GetConcertExpandedAsync(Guid id);
         Task<IEnumerable<User>> GetUsersOfConcertAsync(Guid concertId);
     }
 }

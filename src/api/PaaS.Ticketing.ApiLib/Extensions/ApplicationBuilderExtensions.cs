@@ -1,11 +1,10 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using System.Diagnostics;
+using System.Linq;
 
 namespace PaaS.Ticketing.ApiLib.Extensions
 {
@@ -20,7 +19,7 @@ namespace PaaS.Ticketing.ApiLib.Extensions
             applicationbuilder.UseSwagger(UseLowercaseUrls);
             applicationbuilder.UseSwaggerUI(opt =>
             {
-                opt.SwaggerEndpoint(url: "/swagger/v1/swagger.json", name: Constants.OpenApi.Title);
+                opt.SwaggerEndpoint(url: $"/swagger/{Constants.OpenApi.ApiVersion}/swagger.json", name: Constants.OpenApi.Title);
                 opt.DisplayOperationId();
                 opt.EnableDeepLinking();
                 opt.DocumentTitle = Constants.OpenApi.Title;
@@ -58,7 +57,7 @@ namespace PaaS.Ticketing.ApiLib.Extensions
                         Title = "An unexpected error occurred!",
                         Status = StatusCodes.Status500InternalServerError,
                         Detail = errorDetail,
-                        Instance = $"urn:mycompany.com:server-error:{Activity.Current.Id}"
+                        Instance = $"urn:{Constants.API.CompanyName}:{Constants.API.ServerError}:{Activity.Current.Id}"
                     };
 
                     // TODO: headers are not propagated

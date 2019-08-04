@@ -1,9 +1,12 @@
-﻿using System.Net;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 
-namespace PaaS.Ticketing.Api.Controllers
+namespace PaaS.Ticketing.Api.Controllers.v1
 {
+    /// <summary>
+    /// Health endpoint for availability tests
+    /// </summary>
     [Route("core/v1/[controller]")]
     [ApiController]
     public class HealthController : ControllerBase

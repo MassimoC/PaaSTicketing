@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace PaaS.Ticketing.Api.Controllers
+namespace PaaS.Ticketing.Api.Controllers.v1
 {
     [Route("core/v1/[controller]")]
     [ApiController]
@@ -58,6 +58,8 @@ namespace PaaS.Ticketing.Api.Controllers
         [Produces("application/json", "application/problem+json")]
         public async Task<IActionResult> GetUserProfile(Guid id)
         {
+            if (id.ToString() == "00000000-0000-0000-0000-000000000000")
+                    throw new ArgumentException("Value not supported");
             var user = await _usersRepository.GetUserAsync(id);
             var result = Mapper.Map<UserDto>(user);
             return Ok(result);
@@ -75,7 +77,7 @@ namespace PaaS.Ticketing.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.NotFound, "User not found", typeof(ProblemDetails))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available", typeof(ProblemDetails))]
         [Consumes("application/json")]
-        [Produces("application/json", "application/problem+json")]
+        //[Produces("application/json", "application/problem+json")]
         public async Task<IActionResult> CreateUserProfile([FromBody] UserCreateDto user)
         {
             var entityUser = Mapper.Map<User>(user);

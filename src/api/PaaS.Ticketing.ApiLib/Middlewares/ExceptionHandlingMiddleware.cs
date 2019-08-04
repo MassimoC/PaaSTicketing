@@ -2,11 +2,9 @@
 using Microsoft.Extensions.Logging;
 using PaaS.Ticketing.ApiLib.Extensions;
 using System;
-using System.Net;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace PaaS.Ticketing.ApiLib.Middlewares
 {
@@ -72,7 +70,7 @@ namespace PaaS.Ticketing.ApiLib.Middlewares
                 Title = "An unexpected error occurred!",
                 Status = StatusCodes.Status500InternalServerError,
                 Detail = errorDetail,
-                Instance = $"urn:mycompany.com:server-error:{Activity.Current.Id}"
+                Instance = $"urn:{Constants.API.CompanyName}:{Constants.API.ServerError}:{Activity.Current.Id}"
             };
 
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;

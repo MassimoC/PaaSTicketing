@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PaaS.Ticketing.ApiLib.Extensions;
 
-namespace PaaS.Ticketing.Api.Controllers
+namespace PaaS.Ticketing.Api.Controllers.v1
 {
     [Route("/errors")]
     [ApiController]

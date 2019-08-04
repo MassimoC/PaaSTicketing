@@ -27,6 +27,15 @@ namespace PaaS.Ticketing.ApiLib.Repositories
         {
             return await _context.Concerts.ToListAsync();
         }
+        public async Task<Concert> GetConcertExpandedAsync(Guid concertId)
+        {
+            return await _context.Concerts
+                .Include(con => con.ConcertUser)
+                    .ThenInclude(ord => ord.User)
+                .Where(con => con.ConcertId == concertId 
+                        && con.ConcertUser.Any(f => f.Status == "Delivered"))
+                .FirstOrDefaultAsync();
+        }
 
         public async Task<IEnumerable<User>> GetUsersOfConcertAsync(Guid concertId)
         {

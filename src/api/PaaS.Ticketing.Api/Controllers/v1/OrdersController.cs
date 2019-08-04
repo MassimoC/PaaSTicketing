@@ -1,39 +1,36 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Text;
-using Microsoft.Extensions.Configuration;
-using System.Diagnostics;
+﻿using AutoMapper;
+using CloudNative.CloudEvents;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
-
-using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Net;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using PaaS.Ticketing.Events;
-using CloudNative.CloudEvents;
-using System.Net.Mime;
-using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.Http;
-using AutoMapper;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-
+using Newtonsoft.Json;
+using PaaS.Ticketing.Api.Examples;
 using PaaS.Ticketing.ApiLib.DTOs;
 using PaaS.Ticketing.ApiLib.Entities;
-using PaaS.Ticketing.ApiLib.Repositories;
 using PaaS.Ticketing.ApiLib.Extensions;
 using PaaS.Ticketing.ApiLib.Factories;
+using PaaS.Ticketing.ApiLib.Repositories;
+using PaaS.Ticketing.Events;
 using PaaS.Ticketing.Events.Data;
-using LoggingContext = PaaS.Ticketing.Events.Logging.Constants;
 using PaaS.Ticketing.Security;
+using Swashbuckle.AspNetCore.Annotations;
+using Swashbuckle.AspNetCore.Filters;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Net;
+using System.Net.Mime;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+using LoggingContext = PaaS.Ticketing.Events.Logging.Constants;
 
-
-
-
-namespace PaaS.Ticketing.Api.Controllers
+namespace PaaS.Ticketing.Api.Controllers.v1
 {
     [Route("core/v1/[controller]")]
     [ApiController]
@@ -117,9 +114,9 @@ namespace PaaS.Ticketing.Api.Controllers
             _logger.LogInformation("API - Order controller - GetOrders");
             if (status.ToUpper() == "ERRORS" || status.ToUpper() == "ERROR") throw new ArgumentException("This should be a 400, 500 just for debug purposes.");
             var orders = await _ordersRepository.GetOrdersAsync(status);
-            var results = Mapper.Map<IEnumerable<OrderDto>>(orders);
+            var result = Mapper.Map<IEnumerable<OrderDto>>(orders);
             _logger.LogInformation($"Returning values");
-            return Ok(results);
+            return Ok(result);
         }
 
         /// <summary>
@@ -129,9 +126,13 @@ namespace PaaS.Ticketing.Api.Controllers
         /// <remarks>Place new order</remarks>
         /// <returns>Return the order details</returns>
         [HttpPost(Name = "Orders_PlaceOrder")]
-        [SwaggerResponse((int)HttpStatusCode.Created, "Order created", typeof(OrderDto))]
-        [SwaggerResponse((int)HttpStatusCode.NotFound, "User or Concert not found", typeof(ProblemDetails))]
+        [SwaggerRequestExample(typeof(OrderCreateDto), typeof(DocOrderCreateDto))]
+        [SwaggerResponse((int)HttpStatusCode.Created, "Order created", typeof(DocOrderDto))]
+        [SwaggerResponseExample((int)HttpStatusCode.Created, typeof(DocOrderDto))]
+        [SwaggerResponse((int)HttpStatusCode.NotFound, "Invalid request - User or Concert not found", typeof(ProblemDetails))]
+        [SwaggerResponseExample((int)HttpStatusCode.NotFound, typeof(DocProblemDetail404))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available", typeof(ProblemDetails))]
+        [SwaggerResponseExample((int)HttpStatusCode.InternalServerError, typeof(DocProblemDetail500))]
         [Consumes("application/json")]
         [Produces("application/json", "application/problem+json")]
         public async Task<IActionResult> PlaceOrder([FromBody] OrderCreateDto orderCreate)
@@ -169,8 +170,6 @@ namespace PaaS.Ticketing.Api.Controllers
             {
                 // drop message in the queue
                 _logger.LogInformation($"Drop message in the queue");
-
-                //TODO KeyVault : local MSI and dicker
                 var sbConnectionString = String.Empty;
                 try
                 {
@@ -188,7 +187,7 @@ namespace PaaS.Ticketing.Api.Controllers
                 var cloudEvent = new CloudEvent("command://order.pay", new Uri("app://ticketing.api"))
                 {
                     Id = Guid.NewGuid().ToString(),
-                    ContentType = new ContentType(MediaTypeNames.Application.Json),
+                    DataContentType = new ContentType(MediaTypeNames.Application.Json),
                     Data = JsonConvert.SerializeObject(new PaymentContext()
                     {
                         Attendee = orderDto.Attendee,
@@ -197,15 +196,18 @@ namespace PaaS.Ticketing.Api.Controllers
                     })
                 };
 
+                var dictionary = new Dictionary<string, string>();
+                dictionary.Add("ShortDescription", "cloud event publishing [command://order.pay]");
+                dictionary.Add("EntityType", LoggingContext.EntityType.Order.ToString());
+                dictionary.Add("EventId", LoggingContext.EventId.Processing.ToString());
+                dictionary.Add("Status", LoggingContext.Status.Pending.ToString());
+                dictionary.Add("CorrelationId", Activity.Current.Id);
+                dictionary.Add("Checkpoint", LoggingContext.CheckPoint.Publisher.ToString());
+                dictionary.Add("Description", "N/A");
+
+                telemetryClient.TrackEvent("command://order.pay", dictionary);
                 _logger.LogInformation(new EventId((int)LoggingContext.EventId.Processing),
-                                      LoggingContext.Template,
-                                      "cloud event publishing [command://order.pay]",
-                                      LoggingContext.EntityType.Order.ToString(),
-                                      LoggingContext.EventId.Processing.ToString(),
-                                      LoggingContext.Status.Pending.ToString(),
-                                      "correlationId",
-                                      LoggingContext.CheckPoint.Publisher.ToString(),
-                                      "long description");
+                                      string.Format("({0})", string.Join(",", dictionary.Values)));
 
                 _logger.LogInformation("COMMAND - Sending message to the bus.");
                 var jsonFormatter = new JsonEventFormatter();
@@ -260,6 +262,7 @@ namespace PaaS.Ticketing.Api.Controllers
             await _ordersRepository.UpdateOrderAsync(orderDb);
 
             _logger.LogInformation("Return order");
+            //TODO missing mapping
             return Ok(orderDb);
         }
 

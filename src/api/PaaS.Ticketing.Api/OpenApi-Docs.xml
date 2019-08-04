@@ -4,14 +4,14 @@
         <name>PaaS.Ticketing.Api</name>
     </assembly>
     <members>
-        <member name="M:PaaS.Ticketing.Api.Controllers.ConcertsController.GetAllConcerts">
+        <member name="M:PaaS.Ticketing.Api.Controllers.v1.ConcertsController.GetAllConcerts">
             <summary>
             Get concerts
             </summary>
             <remarks>Provides a complete object for all known concerts</remarks>
             <returns>Return a list of Concerts</returns>
         </member>
-        <member name="M:PaaS.Ticketing.Api.Controllers.ConcertsController.GetConcert(System.Guid)">
+        <member name="M:PaaS.Ticketing.Api.Controllers.v1.ConcertsController.GetConcert(System.Guid,System.Nullable{System.Int32})">
             <summary>
             Get single concert
             </summary>
@@ -19,7 +19,7 @@
             <remarks>Get information of a single concert</remarks>
             <returns>Return a single concert</returns>
         </member>
-        <member name="M:PaaS.Ticketing.Api.Controllers.ConcertsController.GetUsersByConcert(System.Guid)">
+        <member name="M:PaaS.Ticketing.Api.Controllers.v1.ConcertsController.GetUsersByConcert(System.Guid)">
             <summary>
             Get users of a concert
             </summary>
@@ -27,20 +27,25 @@
             <remarks>Get users of a single concert</remarks>
             <returns>Return a list of users</returns>
         </member>
-        <member name="M:PaaS.Ticketing.Api.Controllers.ErrorController.Error(System.Int32)">
+        <member name="M:PaaS.Ticketing.Api.Controllers.v1.ErrorController.Error(System.Int32)">
             <summary>
             Manages the unmatched routes
             </summary>
             <param name="code">HTTP status code</param>
             <returns>Error formatted as application/problem+json</returns>
         </member>
-        <member name="M:PaaS.Ticketing.Api.Controllers.HealthController.Get">
+        <member name="T:PaaS.Ticketing.Api.Controllers.v1.HealthController">
+            <summary>
+            Health endpoint for availability tests
+            </summary>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Controllers.v1.HealthController.Get">
             <summary>
                 Get Health
             </summary>
             <remarks>Provides an indication about the health of the runtime</remarks>
         </member>
-        <member name="M:PaaS.Ticketing.Api.Controllers.OrdersController.GetOrderById(System.Guid)">
+        <member name="M:PaaS.Ticketing.Api.Controllers.v1.OrdersController.GetOrderById(System.Guid)">
             <summary>
             Get single order (id)
             </summary>
@@ -48,7 +53,7 @@
             <remarks>Search order by Id</remarks>
             <returns>Return an order</returns>
         </member>
-        <member name="M:PaaS.Ticketing.Api.Controllers.OrdersController.GetOrderDetails(System.String)">
+        <member name="M:PaaS.Ticketing.Api.Controllers.v1.OrdersController.GetOrderDetails(System.String)">
             <summary>
             Get single order
             </summary>
@@ -56,7 +61,7 @@
             <remarks>Get information of a single order</remarks>
             <returns>Return an order</returns>
         </member>
-        <member name="M:PaaS.Ticketing.Api.Controllers.OrdersController.GetOrders(System.String)">
+        <member name="M:PaaS.Ticketing.Api.Controllers.v1.OrdersController.GetOrders(System.String)">
             <summary>
             Get orders
             </summary>
@@ -64,7 +69,7 @@
             <remarks>Get list of orders</remarks>
             <returns>Return list of orders</returns>
         </member>
-        <member name="M:PaaS.Ticketing.Api.Controllers.OrdersController.PlaceOrder(PaaS.Ticketing.ApiLib.DTOs.OrderCreateDto)">
+        <member name="M:PaaS.Ticketing.Api.Controllers.v1.OrdersController.PlaceOrder(PaaS.Ticketing.ApiLib.DTOs.OrderCreateDto)">
             <summary>
             Place a new order
             </summary>
@@ -72,7 +77,7 @@
             <remarks>Place new order</remarks>
             <returns>Return the order details</returns>
         </member>
-        <member name="M:PaaS.Ticketing.Api.Controllers.OrdersController.UpdateIncrementalJsonPatch(System.Guid,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{PaaS.Ticketing.ApiLib.DTOs.OrderDto})">
+        <member name="M:PaaS.Ticketing.Api.Controllers.v1.OrdersController.UpdateIncrementalJsonPatch(System.Guid,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{PaaS.Ticketing.ApiLib.DTOs.OrderDto})">
             <summary>
             Update Order
             </summary>
@@ -81,7 +86,7 @@
             <remarks>Update the order (incremental update with Json Patch)</remarks>
             <returns>Acknowledge the object has been updated</returns>
         </member>
-        <member name="M:PaaS.Ticketing.Api.Controllers.OrdersController.ChangeOrderStatus(System.Guid,PaaS.Ticketing.ApiLib.DTOs.OrderStatusDto)">
+        <member name="M:PaaS.Ticketing.Api.Controllers.v1.OrdersController.ChangeOrderStatus(System.Guid,PaaS.Ticketing.ApiLib.DTOs.OrderStatusDto)">
             <summary>
             Update order status
             </summary>
@@ -90,7 +95,12 @@
             <remarks>Update the order status</remarks>
             <returns>Accepted</returns>
         </member>
-        <member name="M:PaaS.Ticketing.Api.Controllers.UsersController.GetAllUsers(System.Nullable{System.Int32})">
+        <member name="T:PaaS.Ticketing.Api.Controllers.v1.RootController">
+            <summary>
+            API root
+            </summary>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Controllers.v1.UsersController.GetAllUsers(System.Nullable{System.Int32})">
             <summary>
             Get users
             </summary>
@@ -98,7 +108,7 @@
             <remarks>Provides a complete object for all known users</remarks>
             <returns>Return a list of Concerts</returns>
         </member>
-        <member name="M:PaaS.Ticketing.Api.Controllers.UsersController.GetUserProfile(System.Guid)">
+        <member name="M:PaaS.Ticketing.Api.Controllers.v1.UsersController.GetUserProfile(System.Guid)">
             <summary>
             Get single user
             </summary>
@@ -106,13 +116,21 @@
             <remarks>Get information of a single user</remarks>
             <returns>Return a single user</returns>
         </member>
-        <member name="M:PaaS.Ticketing.Api.Controllers.UsersController.CreateUserProfile(PaaS.Ticketing.ApiLib.DTOs.UserCreateDto)">
+        <member name="M:PaaS.Ticketing.Api.Controllers.v1.UsersController.CreateUserProfile(PaaS.Ticketing.ApiLib.DTOs.UserCreateDto)">
             <summary>
             Create a new User
             </summary>
             <param name="user">User json representation</param>
             <remarks>Create a new userr</remarks>
             <returns>Return the new user</returns>
+        </member>
+        <member name="M:PaaS.Ticketing.Api.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment,PaaS.Ticketing.ApiLib.Context.TicketingContext)">
+            <summary>
+            // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+            </summary>
+            <param name="app">application builder</param>
+            <param name="env">hosting environment</param>
+            <param name="concertContext">db context</param>
         </member>
     </members>
 </doc>

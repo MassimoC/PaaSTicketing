@@ -41,7 +41,7 @@ namespace PaaS.Ticketing.ApiLib.Middlewares
             //do not loose the scope in case of an unexpected error
             catch (Exception ex) when (LogOnUnexpectedError(ex))
             {
-                return;
+                throw;
             }
         }
 

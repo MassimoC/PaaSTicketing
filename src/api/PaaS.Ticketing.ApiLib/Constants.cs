@@ -14,7 +14,7 @@ namespace PaaS.Ticketing.ApiLib
 
         public static class OpenApi
         {
-            public const string Version = "v1";
+            public const string ApiVersion = "v1";
             public const string Title = "Ticketing API";
             public const string Description = "PaaS Ticketing System";
             public const string TermsOfService = "N/A";
@@ -27,6 +27,9 @@ namespace PaaS.Ticketing.ApiLib
         {
             public const string CloudRoleName = "Ticketing Core API";
             public const string CloudRoleInstance = "Ticketing Core API Instance";
+            public const string CompanyName = "mycompany.com";
+            public const string ServerError = "server-error";
+            public const string ClientError = "client-error";
         }
     }
 }

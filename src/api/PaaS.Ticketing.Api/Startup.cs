@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using PaaS.Ticketing.Api.Extensions;
 using PaaS.Ticketing.ApiLib;
 using PaaS.Ticketing.ApiLib.Context;
 using PaaS.Ticketing.ApiLib.Extensions;
@@ -25,36 +26,33 @@ namespace PaaS.Ticketing.Api
         // Add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add functionality to inject IOptions<T>
-            services.AddOptions();
- 
-            // Secrets
-             services.AddSingleton<IVaultService>(new VaultService(_configuration["Security:VaultName"]));
-            
-            // Application Insights config
             services.ConfigureAI();
             _logger.LogInformation("Startup - Configuring CORE services...");
-
+            
+            // Add functionality to inject IOptions<T>
+            services.AddOptions();
+            services.AddSingleton<IVaultService>(new VaultService(_configuration["Security:VaultName"]));
+            
             // for migrations
             //var cn = Configuration.GetConnectionString(name: "TicketingDB");
             //services.AddDbContext<TicketingContext>(o => o.UseSqlServer(cn));
-
-            // Configure DB
             services.ConfigureDatabase(_configuration);
-
-            // Configure Identity Provider
             services.ConfigureIdp(_configuration);
-
+           
             // Configure API
             services.ConfigureMvc();
-            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-            services.ConfigureOpenApiGeneration();
+            services.ConfigureOpenApiGeneration(true);
+            services.ConfigureOpenApiExamples();
             services.ConfigureRouting();
             services.ConfigureInvalidStateHandling();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
+        /// <param name="app">application builder</param>
+        /// <param name="env">hosting environment</param>
+        /// <param name="concertContext">db context</param>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, TicketingContext concertContext)
         {
             _logger.LogInformation("Startup - Configuring CORE app...");
@@ -72,18 +70,15 @@ namespace PaaS.Ticketing.Api
             // Seed DB
             //concertContext.DataSeed();
 
-            // Configure API
-            app.UseMiddleware<ScopedLoggingMiddleware>();
-            app.UseAuthentication();
             app.UseHttpsRedirection();
             // prefer the middleware approach
             //app.UseExceptionHandlerWithProblemJson();
             app.UseMiddleware<ExceptionHandlingMiddleware>();
-            //app.UseStatusCodePagesWithReExecute("/errors/{0}");
+            //app.UseMiddleware<ScopedLoggingMiddleware>();
+            app.UseAuthentication();
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
             app.UseMvc();
             app.UseOpenApi();
-
-            // Configure Automapper
             AutoMapperConfig.Initialize();
         }
     }
