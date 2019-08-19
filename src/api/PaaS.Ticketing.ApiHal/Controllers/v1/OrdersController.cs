@@ -1,38 +1,36 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using PaaS.Ticketing.ApiLib.DTOs;
-using PaaS.Ticketing.ApiLib.Entities;
-using PaaS.Ticketing.ApiLib.Repositories;
-using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Net;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using PaaS.Ticketing.Events;
+﻿using AutoMapper;
 using CloudNative.CloudEvents;
-using System.Net.Mime;
-using Microsoft.AspNetCore.JsonPatch;
-using PaaS.Ticketing.ApiLib.Extensions;
-using Microsoft.AspNetCore.Http;
-using AutoMapper;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
-using Microsoft.Extensions.Logging;
-using PaaS.Ticketing.ApiLib.Filters;
-using PaaS.Ticketing.Events.Data;
-using System.Text;
-using Microsoft.Extensions.Configuration;
-using LoggingContext = PaaS.Ticketing.Events.Logging.Constants;
-using PaaS.Ticketing.ApiLib.Factories;
-using System.Diagnostics;
+using Halcyon.HAL;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using PaaS.Ticketing.ApiLib.DTOs;
+using PaaS.Ticketing.ApiLib.Entities;
+using PaaS.Ticketing.ApiLib.Extensions;
+using PaaS.Ticketing.ApiLib.Factories;
+using PaaS.Ticketing.ApiLib.Repositories;
+using PaaS.Ticketing.Events;
+using PaaS.Ticketing.Events.Data;
 using PaaS.Ticketing.Security;
-using Halcyon.HAL;
+using Swashbuckle.AspNetCore.Annotations;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Net;
+using System.Net.Mime;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+using LoggingContext = PaaS.Ticketing.Events.Logging.Constants;
 
 namespace PaaS.Ticketing.ApiHal.Controllers.v1
 {
-    [Route("core/v1/[controller]")]
+    [Route("hal/v1/[controller]")]
     [ApiController]
     public class OrdersController : ControllerBase
     {

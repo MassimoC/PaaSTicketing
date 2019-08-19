@@ -12,7 +12,7 @@ namespace PaaS.Ticketing.Api.Controllers.v1
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Get()
         {
-            return Ok("Hey there!");
+            return Ok("Root controller");
         }
     }
 }

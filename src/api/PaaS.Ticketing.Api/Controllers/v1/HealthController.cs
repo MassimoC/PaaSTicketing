@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PaaS.Ticketing.Api.Examples;
 using Swashbuckle.AspNetCore.Annotations;
+using Swashbuckle.AspNetCore.Filters;
 using System.Net;
 
 namespace PaaS.Ticketing.Api.Controllers.v1
@@ -19,6 +21,7 @@ namespace PaaS.Ticketing.Api.Controllers.v1
         [ApiExplorerSettings(IgnoreApi = true)]
         [SwaggerResponse((int)HttpStatusCode.OK, "Runtime is up and running in a healthy state")]
         [SwaggerResponse((int)HttpStatusCode.ServiceUnavailable, "Runtime is not healthy", typeof(ProblemDetails))]
+        [SwaggerResponseExample((int)HttpStatusCode.InternalServerError, typeof(DocProblemDetail500))]
 
         public IActionResult Get()
         {

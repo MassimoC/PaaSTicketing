@@ -20,11 +20,11 @@ namespace PaaS.Ticketing.ApiLib.OpenApi
         /// <param name="context"></param>
         public void Apply(SwaggerDocument swaggerDoc, DocumentFilterContext context)
         {
-            var hostName = (_configuration["ASPNETCORE_ENVIRONMENT"] != "Production")
-                 ? "localhost"
-                 : $"{_configuration["WEBSITE_SITE_NAME"]}.azurewebsites.net";
-            
-            swaggerDoc.Host = hostName;
+            //var hostName = (_configuration["ASPNETCORE_ENVIRONMENT"] != "Production")
+            //     ? "localhost"
+            //     : $"{_configuration["WEBSITE_SITE_NAME"]}.azurewebsites.net";
+
+            //swaggerDoc.Host = hostName;
             swaggerDoc.BasePath = "/";
             swaggerDoc.Schemes = new List<string> { "https" };
         }

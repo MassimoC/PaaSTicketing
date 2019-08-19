@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using PaaS.Ticketing.ApiLib;
@@ -22,6 +14,7 @@ using PaaS.Ticketing.ApiLib.Factories;
 using PaaS.Ticketing.ApiLib.Filters;
 using PaaS.Ticketing.ApiLib.Middlewares;
 using PaaS.Ticketing.Security;
+using System.Linq;
 using static PaaS.Ticketing.ApiLib.ContentTypeNames;
 
 namespace PaaS.Ticketing.ApiHal
@@ -73,7 +66,7 @@ namespace PaaS.Ticketing.ApiHal
                 cfg.Filters.Add(typeof(LogBodyActionFilter));
             })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddApplicationPart(Assembly.Load(new AssemblyName("PaaS.Ticketing.ApiLib")))
+                //.AddApplicationPart(Assembly.Load(new AssemblyName("PaaS.Ticketing.ApiLib")))
                 .AddJsonOptions(opt =>
                 {
                 //explicit datetime configuration
@@ -90,7 +83,7 @@ namespace PaaS.Ticketing.ApiHal
             services.ConfigureRouting();
             services.ConfigureInvalidStateHandling();
             services.AddSingleton<ITelemetryClientFactory, TelemetryClientFactory>();
-            services.AddSingleton<IVaultService>(new VaultService("ticketingsecure"));
+            services.AddSingleton<IVaultService>(new VaultService(Configuration["Security:VaultName"]));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

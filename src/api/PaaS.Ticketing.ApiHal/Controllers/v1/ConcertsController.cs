@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace PaaS.Ticketing.ApiHal.Controllers.v1
 {
-    [Route("core/v1/[controller]")]
+    [Route("hal/v1/[controller]")]
     [ApiController]
     public class ConcertsController : ControllerBase
     {

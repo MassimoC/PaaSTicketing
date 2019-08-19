@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
@@ -9,35 +6,26 @@ using System.Linq;
 using System.Net.Http;
 using Xunit;
 
-namespace PaaS.Ticketing.Api.IntegationTest
+
+namespace PaaS.Ticketing.ApiHal.UnitTest
 {
-    public class TestServerFixture
+    public class TestClientFixture
     {
         internal readonly HttpClient _httpClient;
 
-        public TestServerFixture()
+        public TestClientFixture()
         {
             if (_httpClient != null) return;
             if (System.Environment.GetEnvironmentVariable("Security__VaultName") == null) LaunchSettingsWorkaround();
 
-            var srv = new TestServer(new WebHostBuilder()
-                .ConfigureAppConfiguration((builderContext, config) =>
-                {
-                    var env = builderContext.HostingEnvironment;
-                    config.SetBasePath(env.ContentRootPath);
-                    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-                    config.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
-                    config.AddEnvironmentVariables();
-                })
-                .UseStartup<Startup>());
 
-            _httpClient = srv.CreateClient();
-            _httpClient.BaseAddress = new System.Uri("https://localhost:44328");
+            _httpClient = new HttpClient();
+            _httpClient.BaseAddress = new System.Uri("https://localhost:44311");
         }
 
         public static void LaunchSettingsWorkaround()
         {
-            const string launchSettingsJson = @"Properties\launchSettings.json";
+            const string launchSettingsJson = @"unittestparameters.json";
             if (!File.Exists(launchSettingsJson))
             {
                 return;
@@ -64,8 +52,8 @@ namespace PaaS.Ticketing.Api.IntegationTest
         }
     }
 
-    [CollectionDefinition("TestServer")]
-    public class TestServerCollection : ICollectionFixture<TestServerFixture>
+    [CollectionDefinition("TestClient")]
+    public class TestClientCollection : ICollectionFixture<TestClientFixture>
     {
     }
 }

@@ -115,6 +115,19 @@ namespace PaaS.Ticketing.ApiLib.Extensions
                 cfg.RespectBrowserAcceptHeader = true;
                 cfg.ReturnHttpNotAcceptable = true; // Return 406 for not acceptable media types
 
+                var inputFormatter = cfg.InputFormatters.OfType<JsonInputFormatter>().FirstOrDefault();
+                if (inputFormatter != null)
+                {
+                    if (inputFormatter.SupportedMediaTypes.Contains(Text.Json))
+                    {
+                        inputFormatter.SupportedMediaTypes.Remove(Text.Json);
+                    }
+                    if (inputFormatter.SupportedMediaTypes.Contains(Text.Plain))
+                    {
+                        inputFormatter.SupportedMediaTypes.Remove(Text.Plain);
+                    }
+                }
+
                 var outputFormatter = cfg.OutputFormatters.OfType<JsonOutputFormatter>().FirstOrDefault();
                 if (outputFormatter != null)
                 {
@@ -127,19 +140,22 @@ namespace PaaS.Ticketing.ApiLib.Extensions
                         outputFormatter.SupportedMediaTypes.Remove(Text.Plain);
                     }
                 }
+                var stringFormatter = cfg.OutputFormatters.OfType<StringOutputFormatter>().FirstOrDefault();
+                if (stringFormatter != null) cfg.OutputFormatters.RemoveType<StringOutputFormatter>();
+
                 cfg.Filters.Add(typeof(LogBodyActionFilter));
             })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddJsonOptions(opt =>
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+            .AddJsonOptions(opt =>
+            {
+                //explicit datetime configuration
+                opt.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                opt.SerializerSettings.DateFormatString = "o";
+                opt.SerializerSettings.Converters.Add(new StringEnumConverter
                 {
-                    //explicit datetime configuration
-                    opt.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-                    opt.SerializerSettings.DateFormatString = "o";
-                    opt.SerializerSettings.Converters.Add(new StringEnumConverter
-                    {
-                        CamelCaseText = false
-                    });
+                    CamelCaseText = false
                 });
+            });
         }
 
         /// <summary>

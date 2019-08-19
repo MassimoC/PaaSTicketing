@@ -64,8 +64,10 @@ namespace PaaS.Ticketing.Api.Controllers.v1
         [HttpGet("{id}", Name = "Orders_GetOrderById")]
         [SwaggerResponse((int)HttpStatusCode.OK, "Order object", typeof(OrderDto))]
         [SwaggerResponse((int)HttpStatusCode.NotFound, "Order  not found", typeof(ProblemDetails))]
+        [SwaggerResponseExample((int)HttpStatusCode.NotFound, typeof(DocProblemDetail404))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available", typeof(ProblemDetails))]
-        [Produces("application/json", "application/problem+json")]
+        [SwaggerResponseExample((int)HttpStatusCode.InternalServerError, typeof(DocProblemDetail500))]
+        //[Produces("application/json", "application/problem+json")]
         public async Task<IActionResult> GetOrderById(Guid id)
         {
             _logger.LogInformation("API - Order controller - GetOrderById");
@@ -84,8 +86,10 @@ namespace PaaS.Ticketing.Api.Controllers.v1
         [HttpGet("links/{token}", Name = "Orders_GetOrderDetails")]
         [SwaggerResponse((int)HttpStatusCode.OK, "Order object", typeof(OrderDto))]
         [SwaggerResponse((int)HttpStatusCode.NotFound, "Order  not found", typeof(ProblemDetails))]
+        [SwaggerResponseExample((int)HttpStatusCode.NotFound, typeof(DocProblemDetail404))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available", typeof(ProblemDetails))]
-        [Produces("application/json", "application/problem+json")]
+        [SwaggerResponseExample((int)HttpStatusCode.InternalServerError, typeof(DocProblemDetail500))]
+        //[Produces("application/json", "application/problem+json")]
         [Authorize]
         public async Task<IActionResult> GetOrderDetails(String token)
         {
@@ -107,8 +111,10 @@ namespace PaaS.Ticketing.Api.Controllers.v1
         [HttpGet(Name = "Orders_GetOrders")]
         [SwaggerResponse((int)HttpStatusCode.OK, "Orders list", typeof(IEnumerable<OrderDto>))]
         [SwaggerResponse((int)HttpStatusCode.NotFound, "Orders  not found", typeof(ProblemDetails))]
+        [SwaggerResponseExample((int)HttpStatusCode.NotFound, typeof(DocProblemDetail404))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available", typeof(ProblemDetails))]
-        [Produces("application/json", "application/problem+json")]
+        [SwaggerResponseExample((int)HttpStatusCode.InternalServerError, typeof(DocProblemDetail500))]
+        //[Produces("application/json", "application/problem+json")]
         public async Task<IActionResult> GetOrders([FromQuery(Name = "status")]string status = "")
         {
             _logger.LogInformation("API - Order controller - GetOrders");
@@ -134,7 +140,7 @@ namespace PaaS.Ticketing.Api.Controllers.v1
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available", typeof(ProblemDetails))]
         [SwaggerResponseExample((int)HttpStatusCode.InternalServerError, typeof(DocProblemDetail500))]
         [Consumes("application/json")]
-        [Produces("application/json", "application/problem+json")]
+        //[Produces("application/json", "application/problem+json")]
         public async Task<IActionResult> PlaceOrder([FromBody] OrderCreateDto orderCreate)
         {
             // dependency tracking
@@ -242,9 +248,11 @@ namespace PaaS.Ticketing.Api.Controllers.v1
         [HttpPatch("{id}", Name = "Orders_UpdateIncrementalJsonPatch")]
         [SwaggerResponse((int)HttpStatusCode.NoContent, "The data has been updated", typeof(JsonPatchDocument))]
         [SwaggerResponse((int)HttpStatusCode.NotFound, "Order not found", typeof(ProblemDetails))]
+        [SwaggerResponseExample((int)HttpStatusCode.NotFound, typeof(DocProblemDetail404))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available", typeof(ProblemDetails))]
+        [SwaggerResponseExample((int)HttpStatusCode.InternalServerError, typeof(DocProblemDetail500))]
         [Consumes("application/json-patch+json")]
-        [Produces("application/json", "application/problem+json")]
+        //[Produces("application/json", "application/problem+json")]
         public async Task<IActionResult> UpdateIncrementalJsonPatch(Guid id, [FromBody]JsonPatchDocument<OrderDto> order)
         {
             _logger.LogInformation("API - Order controller - UpdateIncrementalJsonPatch");
@@ -276,9 +284,11 @@ namespace PaaS.Ticketing.Api.Controllers.v1
         [HttpPost("{id}/state", Name = "Orders_UpdateOrderStatus")]
         [SwaggerResponse((int)HttpStatusCode.Accepted, "Status change has been accepted. No response body", typeof(OrderStatusDto))]
         [SwaggerResponse((int)HttpStatusCode.NotFound, "Order not found", typeof(ProblemDetails))]
+        [SwaggerResponseExample((int)HttpStatusCode.NotFound, typeof(DocProblemDetail404))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "API is not available", typeof(ProblemDetails))]
+        [SwaggerResponseExample((int)HttpStatusCode.InternalServerError, typeof(DocProblemDetail500))]
         [Consumes("application/json")]
-        [Produces("application/json", "application/problem+json")]
+        //[Produces("application/json", "application/problem+json")]
         public async Task<IActionResult> ChangeOrderStatus(Guid id, [FromBody]OrderStatusDto orderStatus)
         {
             _logger.LogInformation("API - Order controller - ChangeOrderStatus");
