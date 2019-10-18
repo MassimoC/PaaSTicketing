@@ -75,6 +75,7 @@ namespace PaaS.Ticketing.ApiLib.Extensions
                 {
                     options.Authority = idpAuthority;
                     options.ApiName = idpApiName;
+                    //options.RequireHttpsMetadata = false;
                 });
         }
 

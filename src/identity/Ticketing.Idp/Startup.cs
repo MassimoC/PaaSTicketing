@@ -14,7 +14,7 @@ namespace Ticketing.Idp
             services.AddMvc();
 
             services.AddIdentityServer()
-                .AddDeveloperSigningCredential() // in prod a real cert should be used (multuple instance of idsrv will have different KID)
+                .AddDeveloperSigningCredential(true) // in prod a real cert should be used (multuple instance of idsrv will have different KID)
                 //TODO add certificate instead of develper signing credentials.
                 //var signingCertificate = new X509Certificate2(CertificatePath, CertificatePassword);
                 .AddTestUsers(InMemoryConfiguration.GetUsersFromIdentityRepository())

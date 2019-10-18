@@ -96,7 +96,7 @@ namespace PaaS.Ticketing.Api.IntegationTest
             var accessToken = idpToken["access_token"].ToString();
 
             //Arrange
-            var request = new HttpRequestMessage(new HttpMethod("GET"), "/core/v1/orders/67890");
+            var request = new HttpRequestMessage(new HttpMethod("GET"), "/core/v1/orders/links/67890");
             fixture._httpClient.DefaultRequestHeaders.Accept.Clear();
             fixture._httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             fixture._httpClient.DefaultRequestHeaders.Authorization =new AuthenticationHeaderValue("Bearer", accessToken);

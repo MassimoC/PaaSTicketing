@@ -9,7 +9,6 @@ namespace PaaS.Ticketing.ApiLib.Extensions
     {
         public ProblemDetailsError(int statusCode, string detail = "", string cid ="") : base()
         {
-            //condition ? consequent : alternative
             var instanceId = (!String.IsNullOrEmpty(cid)) ? cid : Activity.Current.Id;
 
             var errorType = statusCode.Between(500, 599, true) ? Constants.API.ServerError :

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Logging;
 using PaaS.Ticketing.Api.Extensions;
 using PaaS.Ticketing.ApiLib;
 using PaaS.Ticketing.ApiLib.Context;
@@ -38,7 +39,8 @@ namespace PaaS.Ticketing.Api
             //services.AddDbContext<TicketingContext>(o => o.UseSqlServer(cn));
             services.ConfigureDatabase(_configuration);
             services.ConfigureIdp(_configuration);
-           
+            IdentityModelEventSource.ShowPII = true;
+
             // Configure API
             services.ConfigureMvc();
             services.ConfigureOpenApiGeneration(true);
@@ -63,16 +65,12 @@ namespace PaaS.Ticketing.Api
             }
             else
             {
+                app.UseHttpsRedirection();
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
-            // Seed DB
             //concertContext.DataSeed();
-
-            app.UseHttpsRedirection();
-            // prefer the middleware approach
-            //app.UseExceptionHandlerWithProblemJson();
             app.UseMiddleware<ExceptionHandlingMiddleware>();
             //app.UseMiddleware<ScopedLoggingMiddleware>();
             app.UseAuthentication();

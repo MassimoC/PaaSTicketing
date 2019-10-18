@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using PaaS.Ticketing.ApiLib.Extensions;
 using System;
 using System.Diagnostics;
-using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace PaaS.Ticketing.ApiLib.Middlewares
@@ -60,7 +61,6 @@ namespace PaaS.Ticketing.ApiLib.Middlewares
             var logger = loggerFactory.CreateLogger(categoryName);
             logger.LogCritical(ex, ex.Message);
 
-            //context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             var errorDetail = context.Request.IsLocalRequest()
                 ? ex.Demystify().ToString()
                 : "The instance value should be used to identify the problem when calling customer support";
@@ -73,8 +73,10 @@ namespace PaaS.Ticketing.ApiLib.Middlewares
                 Instance = $"urn:{Constants.API.CompanyName}:{Constants.API.ServerError}:{Activity.Current.Id}"
             };
 
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            context.Response.WriteJson(problemDetails, contentType: ContentTypeNames.Application.JsonProblem);
+            problemDetails.Extensions.Add("traceId", context.TraceIdentifier);
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            context.Response.Headers.Add("Content-Type", String.Format("{0}; {1}", ContentTypeNames.Application.JsonProblem, "charset=utf-8"));
+            context.Response.Body.WriteAsync(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(problemDetails)));
         }
     }
 }
